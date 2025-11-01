@@ -5,80 +5,146 @@ const app = express();
 app.use(express.json());
 
 // ======================
+// RATE LIMITING (In-Memory)
+// ======================
+
+const rateLimit = new Map(); // ip => { count, resetTime }
+const RATE_LIMIT = 60;        // max requests
+const WINDOW_MS = 60 * 1000;  // 1 minute
+
+function rateLimiter(req, res, next) {
+  const ip = req.ip || req.connection.remoteAddress;
+  const now = Date.now();
+
+  if (!rateLimit.has(ip)) {
+    rateLimit.set(ip, { count: 1, resetTime: now + WINDOW_MS });
+    return next();
+  }
+
+  const data = rateLimit.get(ip);
+
+  if (now > data.resetTime) {
+    rateLimit.set(ip, { count: 1, resetTime: now + WINDOW_MS });
+    return next();
+  }
+
+  if (data.count >= RATE_LIMIT) {
+    const retryAfter = Math.ceil((data.resetTime - now) / 1000);
+    return res.status(429).json({
+      creator: "@BJ_Devs on Telegram",
+      ok: false,
+      error: "Too many requests",
+      retry_after: retryAfter
+    });
+  }
+
+  data.count++;
+  rateLimit.set(ip, data);
+  next();
+}
+
+app.use(rateLimiter);
+
+// ======================
+// RESPONSE HELPER (Pretty + Creator)
+// ======================
+
+function sendResponse(res, data, status = 200) {
+  res.setHeader('Content-Type', 'application/json');
+  const response = {
+    creator: "@BJ_Devs on Telegram",
+    ok: true,
+    ...data
+  };
+  res.status(status).send(JSON.stringify(response, null, 2));
+}
+
+function sendError(res, message, status = 400) {
+  res.setHeader('Content-Type', 'application/json');
+  res.status(status).send(JSON.stringify({
+    creator: "@BJ_Devs on Telegram",
+    ok: false,
+    error: message
+  }, null, 2));
+}
+
+// ======================
 // DISPOSABLE MAIL FUNCTIONS
 // ======================
 
 async function getCustomMail(name) {
-  const checkRes = await axios.post(
-    'https://www.disposablemail.com/index/email-check/',
-    new URLSearchParams({ email: name, format: 'json' }),
-    {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'Accept-Encoding': 'gzip, deflate, br, zstd',
-        'x-requested-with': 'XMLHttpRequest',
-        'origin': 'https://www.disposablemail.com',
+  try {
+    const checkRes = await axios.post(
+      'https://www.disposablemail.com/index/email-check/',
+      new URLSearchParams({ email: name, format: 'json' }),
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
+          'Accept': 'application/json, text/javascript, */*; q=0.01',
+          'x-requested-with': 'XMLHttpRequest',
+          'origin': 'https://www.disposablemail.com',
+        }
       }
-    }
-  );
+    );
 
-  if (checkRes.data !== 'ok') return null;
+    if (checkRes.data !== 'ok') return null;
 
-  const createRes = await axios.post(
-    'https://www.disposablemail.com/index/new-email/',
-    new URLSearchParams({ emailInput: name, format: 'json' }),
-    {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'Accept-Encoding': 'gzip, deflate, br, zstd',
-        'x-requested-with': 'XMLHttpRequest',
-        'origin': 'https://www.disposablemail.com',
+    const createRes = await axios.post(
+      'https://www.disposablemail.com/index/new-email/',
+      new URLSearchParams({ emailInput: name, format: 'json' }),
+      {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
+          'Accept': 'application/json, text/javascript, */*; q=0.01',
+          'x-requested-with': 'XMLHttpRequest',
+          'origin': 'https://www.disposablemail.com',
+        }
       }
-    }
-  );
+    );
 
-  const cookie = createRes.headers['set-cookie']?.find(c => c.includes('TMA='))?.split(';')[0];
-  const email = decodeURIComponent(cookie?.split('=')[1]);
+    const cookie = createRes.headers['set-cookie']?.find(c => c.includes('TMA='))?.split(';')[0];
+    const email = decodeURIComponent(cookie?.split('=')[1]);
 
-  return { email, session: cookie };
+    return { email, session: cookie };
+  } catch (err) {
+    return null;
+  }
 }
 
 async function getDefaultMail() {
-  const homeRes = await axios.get('https://www.disposablemail.com', {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-      'Accept-Encoding': 'gzip, deflate, br, zstd',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'DNT': '1',
-      'Referer': 'https://www.disposablemail.com/',
-    },
-    decompress: true
-  });
+  try {
+    const homeRes = await axios.get('https://www.disposablemail.com', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Referer': 'https://www.disposablemail.com/',
+      },
+      decompress: true
+    });
 
-  const setCookie = homeRes.headers['set-cookie'];
-  const phpsessid = setCookie?.find(c => c.includes('PHPSESSID'))?.split(';')[0];
-  const csrf = homeRes.data.match(/const CSRF\s*=\s*"(.+?)"/)?.[1];
+    const setCookie = homeRes.headers['set-cookie'];
+    const phpsessid = setCookie?.find(c => c.includes('PHPSESSID'))?.split(';')[0];
+    const csrf = homeRes.data.match(/const CSRF\s*=\s*"(.+?)"/)?.[1];
 
-  const inboxRes = await axios.get(`https://www.disposablemail.com/index/index?csrf_token=${csrf}`, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
-      'Accept': 'application/json, text/javascript, */*; q=0.01',
-      'X-Requested-With': 'XMLHttpRequest',
-      'Referer': 'https://www.disposablemail.com/',
-      'Accept-Encoding': 'gzip, deflate, br, zstd',
-      'Accept-Language': 'en-US,en;q=0.9',
-      'Cookie': phpsessid
-    },
-    decompress: true
-  });
+    const inboxRes = await axios.get(`https://www.disposablemail.com/index/index?csrf_token=${csrf}`, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Referer': 'https://www.disposablemail.com/',
+        'Cookie': phpsessid
+      },
+      decompress: true
+    });
 
-  return {
-    email: inboxRes.data?.email || null,
-    password: inboxRes.data?.heslo || null,
-  };
+    return {
+      email: inboxRes.data?.email || null,
+      password: inboxRes.data?.heslo || null,
+    };
+  } catch (err) {
+    return { email: null, password: null };
+  }
 }
 
 // ======================
@@ -90,79 +156,75 @@ app.get('/getmail', async (req, res) => {
     const name = req.query.name;
     if (name) {
       const result = await getCustomMail(name);
-      if (!result) return res.status(400).json({ error: 'Mail not available' });
-      return res.json(result);
+      if (!result) return sendError(res, "Mail not available", 400);
+      sendResponse(res, result);
     } else {
       const data = await getDefaultMail();
-      return res.json(data);
+      sendResponse(res, data);
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to generate mail' });
+    sendError(res, "Failed to generate mail", 500);
   }
 });
 
 app.get('/chkmail', async (req, res) => {
   const mail = req.query.mail;
-  if (!mail) return res.status(400).json({ error: 'Missing mail query parameter' });
+  if (!mail) return sendError(res, "Missing mail query parameter", 400);
 
   try {
     const response = await axios.get('https://www.disposablemail.com/index/refresh', {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
         'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'sec-ch-ua-platform': '"Android"',
         'x-requested-with': 'XMLHttpRequest',
-        'sec-ch-ua': '"Google Chrome";v="135", "Not-A.Brand";v="8", "Chromium";v="135"',
-        'sec-fetch-site': 'same-origin',
         'referer': 'https://www.disposablemail.com/',
-        'accept-language': 'en-US,en;q=0.9',
         'Cookie': `TMA=${encodeURIComponent(mail)}`
       }
     });
 
-    res.json(response.data);
+    sendResponse(res, response.data);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to check mail' });
+    sendError(res, "Failed to check mail", 500);
   }
 });
 
 app.get('/delete', async (req, res) => {
   const { mail, id } = req.query;
-  if (!mail || !id) return res.status(400).json({ error: 'Missing mail or id' });
+  if (!mail || !id) return sendError(res, "Missing mail or id", 400);
 
   try {
     const delRes = await axios.post(`https://www.disposablemail.com/delete-email/${id}`,
       new URLSearchParams({ id }),
       {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Mobile Safari/537.36',
+          'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36',
           'Accept': 'application/json, text/javascript, */*; q=0.01',
-          'Accept-Encoding': 'gzip, deflate, br, zstd',
-          'sec-ch-ua-platform': '"Android"',
-          'sec-ch-ua-mobile': '?1',
           'x-requested-with': 'XMLHttpRequest',
-          'sec-fetch-mode': 'cors',
           'Cookie': `TMA=${encodeURIComponent(mail)}`
         }
       }
     );
 
-    res.json(delRes.data);
+    sendResponse(res, delRes.data);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Failed to delete mail' });
+    sendError(res, "Failed to delete mail", 500);
   }
 });
 
 // Health Check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() });
+  sendResponse(res, {
+    status: 'ok',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString()
+  });
 });
 
 // ======================
-// NEW DOCS PAGE (Root Route)
+// DOCS PAGE (Root Route - RaySo Style)
 // ======================
 
 app.get('/', (req, res) => {
@@ -187,7 +249,7 @@ app.get('/', (req, res) => {
   </div>
 
   <!-- Top bar -->
-  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-zinc-950министра/60 border-b border-white/5">
+  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/60 border-b border-white/5">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between min-w-0">
       <a href="#" class="inline-flex items-center gap-2 min-w-0">
         <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 text-xs font-semibold tracking-tight">DM</span>
@@ -319,7 +381,7 @@ app.get('/', (req, res) => {
               <code class="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm">/getmail</code>
               <button type="button" data-copy="#curlGetmail" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-white/10 active:scale-[0.98] transition"><i data-lucide="copy" class="h-4 w-4"></i> Copy</button>
             </div>
-            <pre id="curlGetmail" class="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl https://your-api.vercel.app/getmail</code></pre>
+            <pre id="curlGetmail" class="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl https://temp-mail-bj.vercel.app/getmail</code></pre>
           </div>
         </section>
 
@@ -345,10 +407,10 @@ app.get('/', (req, res) => {
             <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Examples</h2>
           </div>
           <div class="mt-6 flex gap-5 overflow-x-auto snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:snap-none">
-            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Random Email</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl https://your-api.vercel.app/getmail</code></pre></div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Custom Email</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl "https://your-api.vercel.app/getmail?name=bjtricks"</code></pre></div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Check Inbox</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl "https://your-api.vercel.app/chkmail?mail=user%40mail.com"</code></pre></div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Delete Message</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl "https://your-api.vercel.app/delete?mail=user%40mail.com&id=123"</code></pre></div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Random Email</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl https://temp-mail-bj.vercel.app/getmail</code></pre></div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Custom Email</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl "https://temp-mail-bj.vercel.app/getmail?name=bjtricks"</code></pre></div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Check Inbox</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl "https://temp-mail-bj.vercel.app/chkmail?mail=user%40mail.com"</code></pre></div>
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition"><h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Delete Message</h3><pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>curl "https://temp-mail-bj.vercel.app/delete?mail=user%40mail.com&id=123"</code></pre></div>
           </div>
         </section>
 
