@@ -363,22 +363,28 @@ app.get('/', (req, res) => {
       </div>
     </div>
 
-    <!-- Examples -->
-    <div class="obf-card p-6 mb-6">
-      <h3 class="flex items-center gap-2 font-bold text-lg text-slate-900 mb-5">
-        <i class="fas fa-code text-slate-900"></i> Examples
-      </h3>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-bold text-slate-900 mb-2">Random Email</h4>
-          <pre class="text-xs font-mono text-slate-600 overflow-x-auto">curl ${baseUrl}/getmail</pre>
-        </div>
-        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-bold text-slate-900 mb-2">Check Inbox</h4>
-          <pre class="text-xs font-mono text-slate-600 overflow-x-auto">curl "${baseUrl}/chkmail?mail=xyz%40domain.com"</pre>
-        </div>
-      </div>
+<!-- Examples -->
+<div class="obf-card p-6 mb-6">
+  <h3 class="flex items-center gap-2 font-bold text-lg text-slate-900 mb-5">
+    <i class="fas fa-code text-slate-900"></i> Examples
+  </h3>
+  <div class="grid md:grid-cols-2 gap-4">
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <h4 class="text-sm font-bold text-slate-900 mb-2">Random Email</h4>
+      <pre class="text-xs font-mono text-slate-600 overflow-x-auto" id="random-example">curl <span class="text-indigo-600">loading...</span></pre>
+      <button data-copy="" id="copy-random" class="mt-2 text-xs text-slate-600 hover:text-slate-900">
+        <i class="fas fa-copy"></i> Copy
+      </button>
     </div>
+    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <h4 class="text-sm font-bold text-slate-900 mb-2">Check Inbox</h4>
+      <pre class="text-xs font-mono text-slate-600 overflow-x-auto" id="check-example">curl "<span class="text-indigo-600">loading...</span>"</pre>
+      <button data-copy="" id="copy-check" class="mt-2 text-xs text-slate-600 hover:text-slate-900">
+        <i class="fas fa-copy"></i> Copy
+      </button>
+    </div>
+  </div>
+</div>
 
     <!-- Health Badge -->
     <div class="obf-card p-4 mb-6 text-center">
@@ -410,19 +416,31 @@ app.get('/', (req, res) => {
     // Health Check
     fetch('/health').then(r => r.ok && document.getElementById('healthBadge').classList.remove('hidden'));
 
-    // Copy to Clipboard
-    document.querySelectorAll('[data-copy]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const text = btn.getAttribute('data-copy');
-        navigator.clipboard.writeText(text).then(() => {
-          const toast = document.createElement('div');
-          toast.className = 'toast success';
-          toast.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
-          document.getElementById('notification-container').appendChild(toast);
-          setTimeout(() => toast.remove(), 2000);
-        });
+  // Auto detect base URL
+  const baseUrl = window.location.origin;
+
+  // Update examples
+  document.getElementById('random-example').innerHTML = `curl <span class="text-indigo-600">${baseUrl}/getmail</span>`;
+  document.getElementById('check-example').innerHTML = `curl "<span class="text-indigo-600">${baseUrl}/chkmail?mail=xyz%40domain.com</span>"`;
+
+  // Set copy buttons
+  document.getElementById('copy-random').setAttribute('data-copy', `curl ${baseUrl}/getmail`);
+  document.getElementById('copy-check').setAttribute('data-copy', `curl "${baseUrl}/chkmail?mail=xyz%40domain.com"`);
+
+  // Copy handler (agar pehle se script hai toh yeh add kar do)
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.getAttribute('data-copy');
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.createElement('div');
+        toast.className = 'toast success';
+        toast.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
+        document.getElementById('notification-container').appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
       });
     });
+  });
+
 
     // Telegram Popup
     document.getElementById('open-link-btn').addEventListener('click', () => {
