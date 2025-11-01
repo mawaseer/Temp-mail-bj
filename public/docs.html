@@ -396,94 +396,114 @@
         document.getElementById('healthBadge').classList.remove('hidden');
         document.getElementById('healthBadgeMobile').classList.remove('hidden');
       }
-    });
+    }).catch(() => {});
 
     // Generate Email
     document.getElementById('generateMailBtn').addEventListener('click', async () => {
       const name = document.getElementById('customName').value.trim();
-      const url = name ? `${API_BASE}/getmail?name=${name}` : `${API_BASE}/getmail`;
+      const url = name ? `${API_BASE}/getmail?name=${encodeURIComponent(name)}` : `${API_BASE}/getmail`;
       try {
         const res = await fetch(url);
+        if (!res.ok) throw new Error('API error');
         const data = await res.json();
         if (data.email) {
           document.getElementById('mailAddress').textContent = data.email;
           document.getElementById('generatedMail').classList.remove('hidden');
           showToast('Email generated! By BJ Tricks');
         } else {
-          showToast(data.error || 'Failed', true);
+          showToast(data.error || 'Failed to generate', true);
         }
-      } catch {
-        showToast('Network error', true);
+      } catch (err) {
+        showToast('Network error or API down', true);
       }
     });
 
-    document.querySelector('[data-copy-mail]').addEventListener('click', () => {
-      const mail = document.getElementById('mailAddress').textContent;
-      navigator.clipboard.writeText(mail).then(() => showToast('Email copied!'));
+    // Copy generated mail
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('[data-copy-mail]')) {
+        const mail = document.getElementById('mailAddress').textContent;
+        navigator.clipboard.writeText(mail).then(() => showToast('Email copied!'));
+      }
     });
 
     // Check Inbox
     document.getElementById('checkInboxBtn').addEventListener('click', async () => {
       const mail = document.getElementById('checkMail').value.trim();
-      if (!mail) return showToast('Enter email', true);
+      if (!mail) return showToast('Enter email first', true);
       const url = `${API_BASE}/chkmail?mail=${encodeURIComponent(mail)}`;
       const resultDiv = document.getElementById('inboxResult');
-      resultDiv.innerHTML = '<p class="text-zinc-400">Loading...</p>';
+      resultDiv.innerHTML = '<p class="text-zinc-400 text-center">Loading inbox...</p>';
       resultDiv.classList.remove('hidden');
       try {
         const res = await fetch(url);
+        if (!res.ok) throw new Error('Check failed');
         const data = await res.json();
-        if (data.messages && data.messages.length > 0) {
+        if (data && data.messages && data.messages.length > 0) {
           resultDiv.innerHTML = data.messages.map(m => `
             <div class="p-3 rounded-lg border border-white/10 bg-white/5">
-              <div class="flex justify-between">
-                <strong>${m.from}</strong>
-                <button class="text-xs text-red-400" onclick="deleteMail('${mail}', '${m.id}')">Delete</button>
+              <div class="flex justify-between items-start">
+                <div>
+                  <strong class="block text-indigo-300">${m.from || 'Unknown'}</strong>
+                  <p class="text-sm mt-1 text-zinc-300">${m.subject || 'No subject'}</p>
+                  <small class="text-zinc-500">${new Date(m.date || Date.now()).toLocaleString()}</small>
+                </div>
+                <button onclick="deleteMail('${encodeURIComponent(mail)}', '${m.id}')" class="text-xs text-red-400 hover:text-red-300 ml-2">
+                  <i data-lucide="trash-2" class="h-4 w-4"></i> Delete
+                </button>
               </div>
-              <p class="text-sm mt-1">${m.subject}</p>
             </div>
           `).join('');
+          lucide.createIcons();
         } else {
-          resultDiv.innerHTML = '<p class="text-zinc-500">No messages</p>';
+          resultDiv.innerHTML = '<p class="text-zinc-500 text-center">No messages found</p>';
         }
-      } catch {
-        resultDiv.innerHTML = '<p class="text-rose-400">Failed to load inbox</p>';
+      } catch (err) {
+        resultDiv.innerHTML = '<p class="text-rose-400 text-center">Failed to load inbox</p>';
       }
     });
 
-    window.deleteMail = async (mail, id) => {
-      const url = `${API_BASE}/delete?mail=${encodeURIComponent(mail)}&id=${id}`;
+    // Global delete function
+    window.deleteMail = async (encodedMail, id) => {
+      const url = `${API_BASE}/delete?mail=${encodedMail}&id=${id}`;
       try {
-        await fetch(url);
-        showToast('Message deleted');
-        document.getElementById('checkInboxBtn').click();
-      } catch {
+        const res = await fetch(url);
+        if (res.ok) {
+          showToast('Message deleted successfully!');
+          // Refresh inbox
+          document.getElementById('checkInboxBtn').click();
+        } else {
+          throw new Error('Delete failed');
+        }
+      } catch (err) {
         showToast('Delete failed', true);
       }
     };
 
-    // Mobile menu
+    // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobileMenuButton');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileOverlay = document.getElementById('mobileOverlay');
     const iconMenu = document.getElementById('iconMenu');
     const iconClose = document.getElementById('iconClose');
 
-    mobileMenuBtn.addEventListener('click', () => {
-      const isOpen = !mobileMenu.classList.contains('hidden');
-      if (isOpen) {
-        mobileMenu.classList.add('hidden');
-        mobileOverlay.classList.add('pointer-events-none', 'opacity-0');
-        iconMenu.classList.remove('hidden');
-        iconClose.classList.add('hidden');
-      } else {
-        mobileMenu.classList.remove('hidden');
-        mobileOverlay.classList.remove('pointer-events-none', 'opacity-0');
-        iconMenu.classList.add('hidden');
-        iconClose.classList.remove('hidden');
-      }
-    });
-    mobileOverlay.addEventListener('click', () => mobileMenuBtn.click());
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isOpen = !mobileMenu.classList.contains('hidden');
+        if (isOpen) {
+          mobileMenu.classList.add('hidden', 'opacity-0', '-translate-y-2');
+          mobileOverlay.classList.add('opacity-0', 'pointer-events-none');
+          iconMenu.classList.remove('hidden');
+          iconClose.classList.add('hidden');
+        } else {
+          mobileMenu.classList.remove('hidden', 'opacity-0', '-translate-y-2');
+          mobileMenu.classList.add('opacity-100', 'translate-y-0');
+          mobileOverlay.classList.remove('opacity-0', 'pointer-events-none');
+          iconMenu.classList.add('hidden');
+          iconClose.classList.remove('hidden');
+        }
+      });
+    }
+    if (mobileOverlay) mobileOverlay.addEventListener('click', () => mobileMenuBtn.click());
   </script>
 </body>
 </html>
