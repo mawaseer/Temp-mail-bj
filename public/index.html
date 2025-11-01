@@ -20,9 +20,9 @@
   <!-- Top bar -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/60 border-b border-white/5">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between min-w-0">
-      <a href="https://t.me/BJ_Devs" target="_blank" class="inline-flex items-center gap-2 min-w-0">
-        <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 text-xs font-semibold tracking-tight">BJ</span>
-        <span class="text-sm font-semibold tracking-tight text-zinc-200 truncate">Disposable Mail API - BJ Tricks</span>
+      <a href="#" class="inline-flex items-center gap-2 min-w-0">
+        <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/5 ring-1 ring-white/10 text-xs font-semibold tracking-tight">DM</span>
+        <span class="text-sm font-semibold tracking-tight text-zinc-200 truncate">Disposable Mail API - By BJ Tricks</span>
       </a>
       <nav class="hidden lg:flex items-center gap-6">
         <a href="#quick-start" class="text-sm text-zinc-400 hover:text-zinc-100 transition-colors">Quick Start</a>
@@ -37,7 +37,7 @@
         </div>
         <a href="https://t.me/BJ_Devs" target="_blank" class="hidden sm:inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold tracking-tight hover:bg-white/10 hover:border-white/20 transition-colors">
           <i data-lucide="rocket" class="h-4 w-4"></i>
-          Powered by BJ Tricks
+          By BJ Tricks
         </a>
         <button id="mobileMenuButton" aria-expanded="false" aria-controls="mobileMenu" class="md:inline-flex lg:hidden inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-2 text-zinc-200 hover:bg-white/10 hover:border-white/20 active:scale-95 transition focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
           <i id="iconMenu" data-lucide="menu" class="h-5 w-5 transition-transform"></i>
@@ -86,12 +86,12 @@
         <div class="min-w-0 lg:col-span-7">
           <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300 mb-4">
             <span class="inline-flex h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
-            v1.0.0 • Custom & Random Emails • Real-time Inbox - By BJ Tricks
+            v1.0.0 • By BJ Tricks • Join @BJ_Devs
           </div>
           <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
             <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-indigo-300 to-violet-300">Disposable Email API</span>
           </h1>
-          <p class="mt-4 sm:mt-5 text-base sm:text-lg text-zinc-400 max-w-2xl">Generate temporary email addresses, check inbox, and delete messages — all via API. Created by BJ Tricks.</p>
+          <p class="mt-4 sm:mt-5 text-base sm:text-lg text-zinc-400 max-w-2xl">Generate temporary email addresses, check inbox, and delete messages — all via API. By BJ Tricks</p>
           <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
             <a href="#api-tester" class="scroll-link inline-flex items-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-4 py-2.5 text-sm font-semibold tracking-tight text-white shadow-sm hover:brightness-110 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 transition">
               <i data-lucide="beaker" class="h-4 w-4"></i>
@@ -102,6 +102,9 @@
               Quick Start
             </a>
           </div>
+          <div class="mt-4">
+            <a href="https://t.me/BJ_Devs" target="_blank" class="text-sm text-zinc-400 hover:text-zinc-200">Join @BJ_Devs for more tricks & updates</a>
+          </div>
         </div>
         <div class="min-w-0 lg:col-span-5">
           <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-4 sm:p-6 shadow-2xl">
@@ -110,7 +113,7 @@
                 <i data-lucide="mail" class="h-4 w-4"></i>
                 Preview
               </div>
-              <span class="text-xs text-zinc-400">Real-time</span>
+              <span class="text-xs text-zinc-400">By BJ Tricks</span>
             </div>
             <div class="mt-3 sm:mt-4 aspect-[16/10] w-full overflow-hidden rounded-lg border border-white/10">
               <img alt="Email preview" src="https://images.unsplash.com/photo-1559526324-c1f275fbfa32?q=80&w=1200&auto=format&fit=crop" class="h-full w-full object-cover" loading="lazy">
@@ -163,7 +166,7 @@
             </div>
             <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Quick Start - By BJ Tricks</h2>
           </div>
-          <p class="mt-3 text-zinc-400">Generate a disposable email with one simple GET request. No auth needed!</p>
+          <p class="mt-3 text-zinc-400">Generate a disposable email with one request:</p>
           <div class="mt-5 rounded-xl border border-white/10 bg-zinc-950/60 p-4 sm:p-5">
             <div class="flex flex-wrap items-center gap-2">
               <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
@@ -172,9 +175,9 @@
                 <i data-lucide="copy" class="h-4 w-4"></i> Copy cURL
               </button>
             </div>
-            <pre id="curlGetMail" class="w-full max-w-full mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace] text-zinc-200" style="scrollbar-width: thin;"><code>curl "https://YOUR_API_BASE_URL.vercel.app/getmail"</code></pre>
-            <p class="mt-3 text-xs text-zinc-500">Response: <code>{"email": "random@domain.com"}</code></p>
+            <pre id="curlGetMail" class="w-full max-w-full mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace] text-zinc-200" style="scrollbar-width: thin;"><code>curl https://temp-mail-bj.vercel.app/getmail</code></pre>
           </div>
+          <div class="mt-4 text-sm text-zinc-500">Credit: By BJ Tricks | <a href="https://t.me/BJ_Devs" target="_blank" class="text-indigo-400 hover:text-indigo-300">@BJ_Devs</a></div>
         </section>
 
         <!-- API Tester -->
@@ -183,26 +186,25 @@
             <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
               <i data-lucide="beaker" class="h-5 w-5 text-indigo-400"></i>
             </div>
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">API Tester - Live Test</h2>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">API Tester - By BJ Tricks</h2>
           </div>
-          <p class="mt-3 text-zinc-400">Test endpoints directly here. Update <code class="bg-white/5 px-1.5 py-0.5 rounded">YOUR_API_BASE_URL</code> in script with your Vercel URL.</p>
+          <p class="mt-3 text-zinc-400">Test all endpoints live. By BJ Tricks</p>
 
           <div class="mt-6 space-y-6">
             <!-- Generate Email -->
             <div class="rounded-xl border border-white/10 bg-white/5 p-5">
-              <h3 class="text-lg font-semibold flex items-center gap-2 mb-3"><i data-lucide="mail-plus" class="h-5 w-5 text-indigo-400"></i> Generate Email</h3>
+              <h3 class="text-lg font-semibold flex items-center gap-2 mb-3"><i data-lucide="mail" class="h-5 w-5 text-indigo-400"></i> Generate Email</h3>
               <div class="flex flex-col sm:flex-row gap-3">
-                <input id="customName" type="text" placeholder="Optional: custom name (e.g., bjtest123)" class="flex-1 rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+                <input id="customName" type="text" placeholder="Optional: custom name (e.g. bjtest)" class="flex-1 rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
                 <button id="generateMailBtn" class="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-5 py-3 text-sm font-semibold tracking-tight text-white shadow-sm hover:brightness-110 active:scale-[0.98] transition">
                   <i data-lucide="plus" class="h-4 w-4"></i> Generate
                 </button>
               </div>
               <div id="generatedMail" class="mt-4 hidden rounded-lg border border-white/10 bg-zinc-900 p-4">
                 <div class="flex items-center justify-between">
-                  <code id="mailAddress" class="text-sm text-indigo-300 font-mono"></code>
-                  <button id="copyMailBtn" class="text-xs text-zinc-400 hover:text-zinc-100"><i data-lucide="copy" class="h-4 w-4"></i></button>
+                  <code id="mailAddress" class="text-sm text-indigo-300"></code>
+                  <button data-copy-mail class="text-xs text-zinc-400 hover:text-zinc-100"><i data-lucide="copy" class="h-4 w-4"></i></button>
                 </div>
-                <p class="mt-2 text-xs text-zinc-500">Use this email to test signups!</p>
               </div>
             </div>
 
@@ -210,24 +212,15 @@
             <div class="rounded-xl border border-white/10 bg-white/5 p-5">
               <h3 class="text-lg font-semibold flex items-center gap-2 mb-3"><i data-lucide="inbox" class="h-5 w-5 text-indigo-400"></i> Check Inbox</h3>
               <div class="flex flex-col sm:flex-row gap-3">
-                <input id="checkMail" type="text" placeholder="Enter generated email" class="flex-1 rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+                <input id="checkMail" type="text" placeholder="Enter email to check inbox" class="flex-1 rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
                 <button id="checkInboxBtn" class="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-5 py-3 text-sm font-semibold tracking-tight text-white shadow-sm hover:brightness-110 active:scale-[0.98] transition">
                   <i data-lucide="refresh-cw" class="h-4 w-4"></i> Check
                 </button>
               </div>
-              <div id="inboxResult" class="mt-4 hidden space-y-3 max-h-64 overflow-y-auto"></div>
-            </div>
-
-            <!-- Delete Example (Manual) -->
-            <div class="rounded-xl border border-white/10 bg-white/5 p-5">
-              <h3 class="text-lg font-semibold flex items-center gap-2 mb-3"><i data-lucide="trash-2" class="h-5 w-5 text-indigo-400"></i> Delete Message</h3>
-              <p class="text-sm text-zinc-400 mb-3">Use after checking inbox: <code>/delete?mail=EMAIL&id=MSG_ID</code></p>
-              <button id="loadDeleteExample" class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10">
-                <i data-lucide="lightbulb" class="h-4 w-4"></i> Load Example
-              </button>
-              <pre id="deleteExample" class="mt-3 hidden overflow-x-auto text-[13px] text-zinc-200"><code>curl "https://YOUR_API_BASE_URL.vercel.app/delete?mail=encoded_email&id=123"</code></pre>
+              <div id="inboxResult" class="mt-4 hidden space-y-3"></div>
             </div>
           </div>
+          <div class="mt-4 text-sm text-zinc-500">Tester by BJ Tricks | <a href="https://t.me/BJ_Devs" target="_blank" class="text-indigo-400 hover:text-indigo-300">@BJ_Devs</a></div>
         </section>
 
         <!-- Endpoints -->
@@ -236,54 +229,51 @@
             <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
               <i data-lucide="server" class="h-5 w-5 text-indigo-400"></i>
             </div>
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">API Endpoints - BJ Tricks</h2>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">API Endpoints - By BJ Tricks</h2>
           </div>
           <div class="mt-5 space-y-4">
             <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
                 <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/getmail</code>
-                <span class="text-xs text-zinc-400">Generate random disposable email</span>
+                <span class="text-xs text-zinc-400">Generate random email</span>
                 <button type="button" data-endpoint="/getmail" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
                   <i data-lucide="copy" class="h-4 w-4"></i> Copy
                 </button>
               </div>
-              <pre class="mt-2 text-xs text-zinc-500"><code>{"email": "example@disposable.com"}</code></pre>
             </div>
             <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
-                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/getmail?name=custom</code>
-                <span class="text-xs text-zinc-400">Generate custom email (if available)</span>
-                <button type="button" data-endpoint="/getmail?name=custom" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
+                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/getmail?name=xyz</code>
+                <span class="text-xs text-zinc-400">Custom email (if available)</span>
+                <button type="button" data-endpoint="/getmail?name=xyz" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
                   <i data-lucide="copy" class="h-4 w-4"></i> Copy
                 </button>
               </div>
-              <pre class="mt-2 text-xs text-zinc-500"><code>{"email": "custom@disposable.com", "session": "cookie_value"}</code></pre>
             </div>
             <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
-                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/chkmail?mail=encoded_email</code>
-                <span class="text-xs text-zinc-400">Check inbox for messages</span>
-                <button type="button" data-endpoint="/chkmail?mail=encoded_email" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
+                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/chkmail?mail=...</code>
+                <span class="text-xs text-zinc-400">Check inbox</span>
+                <button type="button" data-endpoint="/chkmail?mail=..." class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
                   <i data-lucide="copy" class="h-4 w-4"></i> Copy
                 </button>
               </div>
-              <pre class="mt-2 text-xs text-zinc-500"><code>{"messages": [{"from": "sender@example.com", "subject": "Test", "id": "123"}]}</code></pre>
             </div>
             <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
-                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/delete?mail=encoded_email&id=msg_id</code>
-                <span class="text-xs text-zinc-400">Delete specific message</span>
-                <button type="button" data-endpoint="/delete?mail=encoded_email&id=msg_id" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
+                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/delete?mail=...&id=...</code>
+                <span class="text-xs text-zinc-400">Delete message</span>
+                <button type="button" data-endpoint="/delete?mail=...&id=..." class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
                   <i data-lucide="copy" class="h-4 w-4"></i> Copy
                 </button>
               </div>
-              <pre class="mt-2 text-xs text-zinc-500"><code>{"success": true}</code></pre>
             </div>
           </div>
+          <div class="mt-4 text-sm text-zinc-500">Endpoints by BJ Tricks | <a href="https://t.me/BJ_Devs" target="_blank" class="text-indigo-400 hover:text-indigo-300">@BJ_Devs</a></div>
         </section>
 
         <!-- Examples -->
@@ -292,46 +282,35 @@
             <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
               <i data-lucide="lightbulb" class="h-5 w-5 text-indigo-400"></i>
             </div>
-            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Code Examples - By BJ Tricks</h2>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Examples - By BJ Tricks</h2>
           </div>
-          <p class="mt-3 text-zinc-400">Real-world usage with cURL and JS fetch.</p>
-          <div class="mt-6 space-y-4">
+          <div class="mt-6 grid gap-4 lg:grid-cols-2">
             <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
-              <h3 class="text-sm font-semibold text-zinc-300 mb-2">1. Random Email (cURL)</h3>
-              <pre class="overflow-x-auto text-[13px] text-zinc-200"><code>curl "https://YOUR_API_BASE_URL.vercel.app/getmail"
-# Response: {"email": "abc123@disposablemail.com"}</code></pre>
+              <h3 class="text-sm font-semibold text-zinc-300 mb-2">Generate Random Email</h3>
+              <pre class="overflow-x-auto text-[13px] text-zinc-200"><code>GET /getmail</code></pre>
+              <p class="mt-2 text-xs text-zinc-500">Example: curl https://temp-mail-bj.vercel.app/getmail</p>
             </div>
             <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
-              <h3 class="text-sm font-semibold text-zinc-300 mb-2">2. Custom Email (JS Fetch)</h3>
-              <pre class="overflow-x-auto text-[13px] text-zinc-200"><code>fetch('https://YOUR_API_BASE_URL.vercel.app/getmail?name=bjtest')
-  .then(res => res.json())
-  .then(data => console.log(data.email));</code></pre>
-            </div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
-              <h3 class="text-sm font-semibold text-zinc-300 mb-2">3. Check Inbox (cURL)</h3>
-              <pre class="overflow-x-auto text-[13px] text-zinc-200"><code>curl "https://YOUR_API_BASE_URL.vercel.app/chkmail?mail=encoded_email"
-# Response: {"messages": [{"id": "1", "from": "test@example.com", "subject": "Welcome"}]}</code></pre>
-            </div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
-              <h3 class="text-sm font-semibold text-zinc-300 mb-2">4. Delete Message (JS)</h3>
-              <pre class="overflow-x-auto text-[13px] text-zinc-200"><code>fetch(`https://YOUR_API_BASE_URL.vercel.app/delete?mail=${encodeURIComponent(email)}&id=1`)
-  .then(() => console.log('Deleted!'));</code></pre>
+              <h3 class="text-sm font-semibold text-zinc-300 mb-2">Custom Email</h3>
+              <pre class="overflow-x-auto text-[13px] text-zinc-200"><code>GET /getmail?name=bjtest</code></pre>
+              <p class="mt-2 text-xs text-zinc-500">Example: curl "https://temp-mail-bj.vercel.app/getmail?name=bjtest"</p>
             </div>
           </div>
+          <div class="mt-4 text-sm text-zinc-500">Examples by BJ Tricks | <a href="https://t.me/BJ_Devs" target="_blank" class="text-indigo-400 hover:text-indigo-300">@BJ_Devs</a></div>
         </section>
 
         <!-- Footer -->
         <section class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-5 sm:p-8">
           <div class="text-center">
-            <h3 class="text-xl font-bold tracking-tight">Disposable Mail API v1.0.0</h3>
-            <p class="mt-2 text-zinc-400">Temporary emails for testing & privacy. Made with ❤️ by BJ Tricks</p>
+            <h3 class="text-xl font-bold tracking-tight">Disposable Mail API v1.0.0 - By BJ Tricks</h3>
+            <p class="mt-2 text-zinc-400">Temporary emails for testing, automation, and privacy</p>
             <div class="mt-6 flex items-center justify-center gap-2">
-              <span class="text-sm text-zinc-400">Join Channel:</span>
+              <span class="text-sm text-zinc-400">Powered by</span>
               <a href="https://t.me/BJ_Devs" target="_blank" class="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 transition">
-                <i data-lucide="send" class="h-4 w-4"></i> @BJ_Devs
+                <i data-lucide="rocket" class="h-4 w-4"></i> BJ Tricks @BJ_Devs
               </a>
             </div>
-            <div class="mt-3 text-xs text-zinc-500">© 2025 BJ Tricks • API Docs</div>
+            <div class="mt-3 text-xs text-zinc-500">Docs by BJ Tricks | API Examples | Join Channel</div>
           </div>
         </section>
       </div>
@@ -377,7 +356,7 @@
       });
     });
 
-    const API_BASE = 'https://YOUR_API_BASE_URL.vercel.app'; // ← Yahan apna Vercel URL daalo
+    const API_BASE = 'https://temp-mail-bj.vercel.app'; 
     const toast = document.getElementById('toast');
     const toastMessage = document.getElementById('toastMessage');
 
@@ -414,33 +393,31 @@
     // Health check
     fetch(`${API_BASE}/getmail`).then(r => {
       if (r.ok) {
-        document.getElementById('healthBadge')?.classList.remove('hidden');
-        document.getElementById('healthBadgeMobile')?.classList.remove('hidden');
+        document.getElementById('healthBadge').classList.remove('hidden');
+        document.getElementById('healthBadgeMobile').classList.remove('hidden');
       }
-    }).catch(() => {});
+    });
 
     // Generate Email
     document.getElementById('generateMailBtn').addEventListener('click', async () => {
       const name = document.getElementById('customName').value.trim();
-      const url = name ? `${API_BASE}/getmail?name=${encodeURIComponent(name)}` : `${API_BASE}/getmail`;
+      const url = name ? `${API_BASE}/getmail?name=${name}` : `${API_BASE}/getmail`;
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error('API Error');
         const data = await res.json();
         if (data.email) {
           document.getElementById('mailAddress').textContent = data.email;
           document.getElementById('generatedMail').classList.remove('hidden');
-          showToast(`Generated: ${data.email}`);
+          showToast('Email generated! By BJ Tricks');
         } else {
-          showToast(data.error || 'No email available', true);
+          showToast(data.error || 'Failed', true);
         }
-      } catch (err) {
-        showToast('Network error - Check URL', true);
+      } catch {
+        showToast('Network error', true);
       }
     });
 
-    // Copy Mail
-    document.getElementById('copyMailBtn').addEventListener('click', () => {
+    document.querySelector('[data-copy-mail]').addEventListener('click', () => {
       const mail = document.getElementById('mailAddress').textContent;
       navigator.clipboard.writeText(mail).then(() => showToast('Email copied!'));
     });
@@ -448,76 +425,65 @@
     // Check Inbox
     document.getElementById('checkInboxBtn').addEventListener('click', async () => {
       const mail = document.getElementById('checkMail').value.trim();
-      if (!mail) return showToast('Enter email first', true);
+      if (!mail) return showToast('Enter email', true);
       const url = `${API_BASE}/chkmail?mail=${encodeURIComponent(mail)}`;
       const resultDiv = document.getElementById('inboxResult');
-      resultDiv.innerHTML = '<div class="text-zinc-400 flex items-center gap-2"><i data-lucide="loader-2" class="h-4 w-4 animate-spin"></i> Loading...</div>';
+      resultDiv.innerHTML = '<p class="text-zinc-400">Loading...</p>';
       resultDiv.classList.remove('hidden');
-      lucide.createIcons();
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error('API Error');
         const data = await res.json();
         if (data.messages && data.messages.length > 0) {
           resultDiv.innerHTML = data.messages.map(m => `
             <div class="p-3 rounded-lg border border-white/10 bg-white/5">
-              <div class="flex justify-between items-start">
-                <div>
-                  <strong class="text-zinc-200 block">${m.subject || 'No Subject'}</strong>
-                  <small class="text-zinc-500">From: ${m.from || 'Unknown'}</small>
-                </div>
-                <button onclick="deleteMail('${encodeURIComponent(mail)}', '${m.id}')" class="text-xs text-red-400 hover:text-red-300 ml-2">
-                  <i data-lucide="trash-2" class="h-4 w-4"></i> Delete
-                </button>
+              <div class="flex justify-between">
+                <strong>${m.from}</strong>
+                <button class="text-xs text-red-400" onclick="deleteMail('${mail}', '${m.id}')">Delete</button>
               </div>
+              <p class="text-sm mt-1">${m.subject}</p>
             </div>
           `).join('');
-          lucide.createIcons();
         } else {
-          resultDiv.innerHTML = '<p class="text-zinc-500">No messages yet. Send a test email!</p>';
+          resultDiv.innerHTML = '<p class="text-zinc-500">No messages</p>';
         }
-      } catch (err) {
+      } catch {
         resultDiv.innerHTML = '<p class="text-rose-400">Failed to load inbox</p>';
       }
     });
 
-    // Global delete function
-    window.deleteMail = async (encodedMail, id) => {
-      const url = `${API_BASE}/delete?mail=${encodedMail}&id=${id}`;
+    window.deleteMail = async (mail, id) => {
+      const url = `${API_BASE}/delete?mail=${encodeURIComponent(mail)}&id=${id}`;
       try {
-        const res = await fetch(url);
-        if (res.ok) {
-          showToast('Message deleted!');
-          document.getElementById('checkInboxBtn').click(); // Refresh inbox
-        } else {
-          showToast('Delete failed', true);
-        }
+        await fetch(url);
+        showToast('Message deleted');
+        document.getElementById('checkInboxBtn').click();
       } catch {
-        showToast('Network error', true);
+        showToast('Delete failed', true);
       }
     };
 
-    // Load Delete Example
-    document.getElementById('loadDeleteExample').addEventListener('click', () => {
-      document.getElementById('deleteExample').classList.remove('hidden');
-      showToast('Example loaded!');
-    });
-
-    // Mobile Menu
+    // Mobile menu
     const mobileMenuBtn = document.getElementById('mobileMenuButton');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileOverlay = document.getElementById('mobileOverlay');
-    mobileMenuBtn?.addEventListener('click', () => {
+    const iconMenu = document.getElementById('iconMenu');
+    const iconClose = document.getElementById('iconClose');
+
+    mobileMenuBtn.addEventListener('click', () => {
       const isOpen = !mobileMenu.classList.contains('hidden');
       if (isOpen) {
-        mobileMenu.classList.add('hidden', 'opacity-0', '-translate-y-2');
+        mobileMenu.classList.add('hidden');
         mobileOverlay.classList.add('pointer-events-none', 'opacity-0');
+        iconMenu.classList.remove('hidden');
+        iconClose.classList.add('hidden');
       } else {
-        mobileMenu.classList.remove('hidden', 'opacity-0', '-translate-y-2');
+        mobileMenu.classList.remove('hidden');
         mobileOverlay.classList.remove('pointer-events-none', 'opacity-0');
+        iconMenu.classList.add('hidden');
+        iconClose.classList.remove('hidden');
       }
     });
-    mobileOverlay?.addEventListener('click', () => mobileMenuBtn.click());
+    mobileOverlay.addEventListener('click', () => mobileMenuBtn.click());
   </script>
 </body>
 </html>
