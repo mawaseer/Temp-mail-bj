@@ -1,6 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const path = require('path'); // Added for serving static if needed
 const app = express();
 
 app.use(express.json());
@@ -151,7 +150,7 @@ app.get('/delete', async (req, res) => {
   }
 });
 
-// welcome info page - Updated with docs link and your credit
+// welcome info page - Updated with /docs link & full credits
 app.get('/', (req, res) => {
   res.setHeader('Content-Type', 'text/html');
   res.send(`
@@ -168,13 +167,14 @@ app.get('/', (req, res) => {
         ul { line-height: 1.8; text-align: left; display: inline-block; }
         a { color: #007bff; text-decoration: none; }
         .credit { margin-top: 2rem; font-weight: bold; color: #666; }
+        .docs-link { font-size: 1.2em; background: #007bff; color: white; padding: 10px 20px; border-radius: 5px; display: inline-block; margin: 10px 0; }
       </style>
     </head>
     <body>
       <h1>Disposable Mail API - By BJ Tricks</h1>
       <p>Generate temporary emails for testing. Join my channel for more: <a href="https://t.me/BJ_Devs" target="_blank">@BJ_Devs</a></p>
       <h3>Full Documentation:</h3>
-      <p><a href="/docs" style="font-size: 1.2em; color: #007bff;">View Complete API Docs →</a></p>
+      <a href="/docs" class="docs-link">View Complete API Docs →</a>
       <h3>Endpoints:</h3>
       <ul style="text-align: left;">
         <li><strong>GET <code>/getmail</code></strong> – Random email</li>
