@@ -4,10 +4,7 @@ const app = express();
 
 app.use(express.json());
 
-// ======================
-// RATE LIMITING
-// ======================
-
+// ====================== RATE LIMITING ======================
 const rateLimit = new Map();
 const RATE_LIMIT = 60;
 const WINDOW_MS = 60 * 1000;
@@ -22,7 +19,6 @@ function rateLimiter(req, res, next) {
   }
 
   const data = rateLimit.get(ip);
-
   if (now > data.resetTime) {
     rateLimit.set(ip, { count: 1, resetTime: now + WINDOW_MS });
     return next();
@@ -42,23 +38,14 @@ function rateLimiter(req, res, next) {
   rateLimit.set(ip, data);
   next();
 }
-
 app.use(rateLimiter);
 
-// ======================
-// RESPONSE HELPERS
-// ======================
-
+// ====================== RESPONSE HELPERS ======================
 function sendResponse(res, data, status = 200) {
   res.setHeader('Content-Type', 'application/json');
-  const response = {
-    creator: "@BJ_Devs on Telegram",
-    ok: true,
-    ...data
-  };
+  const response = { creator: "@BJ_Devs on Telegram", ok: true, ...data };
   res.status(status).send(JSON.stringify(response, null, 2));
 }
-
 function sendError(res, message, status = 400) {
   res.setHeader('Content-Type', 'application/json');
   res.status(status).send(JSON.stringify({
@@ -68,10 +55,7 @@ function sendError(res, message, status = 400) {
   }, null, 2));
 }
 
-// ======================
-// DISPOSABLE MAIL LOGIC
-// ======================
-
+// ====================== MAIL LOGIC ======================
 async function getCustomMail(name) {
   try {
     const checkRes = await axios.post(
@@ -79,7 +63,6 @@ async function getCustomMail(name) {
       new URLSearchParams({ email: name, format: 'json' }),
       { headers: { 'x-requested-with': 'XMLHttpRequest', origin: 'https://www.disposablemail.com' } }
     );
-
     if (checkRes.data !== 'ok') return null;
 
     const createRes = await axios.post(
@@ -99,28 +82,16 @@ async function getDefaultMail() {
     const homeRes = await axios.get('https://www.disposablemail.com', {
       headers: { 'User-Agent': 'Mozilla/5.0', 'Accept-Encoding': 'gzip, deflate, br', decompress: true }
     });
-
     const phpsessid = homeRes.headers['set-cookie']?.find(c => c.includes('PHPSESSID'))?.split(';')[0];
     const csrf = homeRes.data.match(/const CSRF\s*=\s*"(.+?)"/)?.[1];
-
     const inboxRes = await axios.get(`https://www.disposablemail.com/index/index?csrf_token=${csrf}`, {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Cookie': phpsessid
-      }
+      headers: { 'X-Requested-With': 'XMLHttpRequest', 'Cookie': phpsessid }
     });
-
-    return {
-      email: inboxRes.data?.email || null,
-      password: inboxRes.data?.heslo || null,
-    };
+    return { email: inboxRes.data?.email || null, password: inboxRes.data?.heslo || null };
   } catch { return { email: null, password: null }; }
 }
 
-// ======================
-// ENDPOINTS
-// ======================
-
+// ====================== ENDPOINTS ======================
 app.get('/getmail', async (req, res) => {
   try {
     const name = req.query.name;
@@ -132,15 +103,12 @@ app.get('/getmail', async (req, res) => {
       const data = await getDefaultMail();
       sendResponse(res, data);
     }
-  } catch {
-    sendError(res, "Failed to generate mail", 500);
-  }
+  } catch { sendError(res, "Failed to generate mail", 500); }
 });
 
 app.get('/chkmail', async (req, res) => {
   const mail = req.query.mail;
   if (!mail) return sendError(res, "Missing mail query parameter", 400);
-
   try {
     const response = await axios.get('https://www.disposablemail.com/index/refresh', {
       headers: {
@@ -151,20 +119,14 @@ app.get('/chkmail', async (req, res) => {
         'Cookie': `TMA=${encodeURIComponent(mail)}`
       }
     });
-
     const raw = response.data;
     let latest = null;
-
     if (raw && typeof raw === 'object') {
       const items = Array.isArray(raw) ? raw : Object.values(raw);
       items.sort((a, b) => (b.id || 0) - (a.id || 0));
       latest = items[0];
     }
-
-    if (!latest) {
-      return sendResponse(res, {});
-    }
-
+    if (!latest) return sendResponse(res, {});
     const cleanMail = {
       predmetZkraceny: latest.predmetZkraceny || "",
       predmet: latest.predmet || "",
@@ -173,42 +135,27 @@ app.get('/chkmail', async (req, res) => {
       kdy: latest.kdy || "",
       precteno: latest.precteno || "old"
     };
-
     sendResponse(res, cleanMail);
-
-  } catch {
-    sendError(res, "Failed to check mail", 500);
-  }
+  } catch { sendError(res, "Failed to check mail", 500); }
 });
 
 app.get('/delete', async (req, res) => {
   const { mail, id } = req.query;
   if (!mail || !id) return sendError(res, "Missing mail or id", 400);
-
   try {
     const delRes = await axios.post(`https://www.disposablemail.com/delete-email/${id}`,
       new URLSearchParams({ id }),
-      {
-        headers: {
-          'x-requested-with': 'XMLHttpRequest',
-          'Cookie': `TMA=${encodeURIComponent(mail)}`
-        }
-      }
+      { headers: { 'x-requested-with': 'XMLHttpRequest', 'Cookie': `TMA=${encodeURIComponent(mail)}` } }
     );
     sendResponse(res, delRes.data);
-  } catch {
-    sendError(res, "Failed to delete mail", 500);
-  }
+  } catch { sendError(res, "Failed to delete mail", 500); }
 });
 
 app.get('/health', (req, res) => {
   sendResponse(res, { status: "ok", uptime: process.uptime(), timestamp: new Date().toISOString() });
 });
 
-// ======================
-// FINAL RAYSO-STYLE DOCS
-// ======================
-
+// ====================== FINAL COMPACT DOCS ======================
 app.get('/', (req, res) => {
   const baseUrl = `${req.protocol}://${req.get('host')}`;
   res.setHeader('Content-Type', 'text/html');
@@ -219,251 +166,143 @@ app.get('/', (req, res) => {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Disposable Mail API - BJ Tricks</title>
   <meta name="theme-color" content="#09090b">
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
-    * { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; }
+    * { font-family: Inter, sans-serif; }
+    pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .compact-card { @apply rounded-xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-4 shadow-md; }
   </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 antialiased min-h-screen overflow-x-hidden selection:bg-indigo-500/30 selection:text-white">
-  <div class="pointer-events-none fixed inset-0 -z-10">
-    <div class="absolute inset-0 bg-[radial-gradient(1200px_600px_at_80%_-20%,rgba(99,102,241,.15),transparent),radial-gradient(800px_400px_at_0%_120%,rgba(168,85,247,.12),transparent)]"></div>
-    <div class="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:48px_48px]"></div>
-  </div>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen">
+  <div class="fixed inset-0 -z-10 bg-[radial-gradient(1200px_600px_at_80%_-20%,rgba(99,102,241,.12),transparent)]"></div>
 
-  <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/60 border-b border-white/5">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between min-w-0">
-      <a href="#" class="inline-flex items-center gap-2 min-w-0">
-        <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-tr from-indigo-600 to-violet-600 text-xs font-bold">DM</span>
-        <span class="text-sm font-semibold tracking-tight text-zinc-200 truncate">Disposable Mail</span>
+  <!-- Header -->
+  <header class="sticky top-0 z-50 backdrop-blur bg-zinc-950/80 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-xs font-bold">DM</div>
+        <span class="font-semibold text-sm">Disposable Mail</span>
       </a>
-      <nav class="hidden lg:flex items-center gap-6">
-        <a href="#quick-start" class="text-sm text-zinc-400 hover:text-zinc-100 transition-colors scroll-link">Quick Start</a>
-        <a href="#endpoints" class="text-sm text-zinc-400 hover:text-zinc-100 transition-colors scroll-link">Endpoints</a>
-        <a href="#examples" class="text-sm text-zinc-400 hover:text-zinc-100 transition-colors scroll-link">Examples</a>
+      <nav class="hidden md:flex gap-5 text-sm">
+        <a href="#quick-start" class="text-zinc-400 hover:text-white scroll-link">Quick Start</a>
+        <a href="#endpoints" class="text-zinc-400 hover:text-white scroll-link">Endpoints</a>
+        <a href="#examples" class="text-zinc-400 hover:text-white scroll-link">Examples</a>
       </nav>
       <div class="flex items-center gap-2">
-        <div id="healthBadge" class="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/10 px-2.5 py-1 text-xs text-zinc-300">
-          <span class="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Live
-        </div>
-        <a href="https://t.me/BJ_Devs" target="_blank" class="hidden sm:inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold tracking-tight hover:bg-white/10 hover:border-white/20 transition">
-          <i data-lucide="telegram" class="h-4 w-4"></i> BJ Tricks
-        </a>
-        <button id="mobileMenuButton" class="lg:hidden inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-2 text-zinc-200 hover:bg-white/10 hover:border-white/20 transition">
-          <i data-lucide="menu" class="h-5 w-5"></i>
-        </button>
+        <div id="healthBadge" class="hidden items-center gap-1 px-2 py-0.5 text-xs border border-white/10 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Live</div>
+        <a href="https://t.me/BJ_Devs" target="_blank" class="text-xs px-2.5 py-1 border border-white/10 rounded hover:bg-white/10">BJ Tricks</a>
+        <button id="menuBtn" class="md:hidden"><i data-lucide="menu" class="w-5 h-5"></i></button>
       </div>
-    </div>
-
-    <div id="mobileMenu" class="lg:hidden fixed inset-x-0 top-14 z-50 border-b border-white/10 bg-zinc-950/95 backdrop-blur px-4 py-4 hidden">
-      <nav class="space-y-1">
-        <a href="#quick-start" class="scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
-          <span class="inline-flex items-center gap-2"><i data-lucide="zap" class="h-4 w-4"></i> Quick Start</span>
-          <i data-lucide="chevron-right" class="h-4 w-4 text-zinc-500"></i>
-        </a>
-        <a href="#endpoints" class="scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
-          <span class="inline-flex items-center gap-2"><i data-lucide="server" class="h-4 w-4"></i> Endpoints</span>
-          <i data-lucide="chevron-right" class="h-4 w-4 text-zinc-500"></i>
-        </a>
-        <a href="#examples" class="scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
-          <span class="inline-flex items-center gap-2"><i data-lucide="code-2" class="h-4 w-4"></i> Examples</span>
-          <i data-lucide="chevron-right" class="h-4 w-4 text-zinc-500"></i>
-        </a>
-      </nav>
-      <div class="my-4 h-px bg-white/10"></div>
-      <a href="https://t.me/BJ_Devs" target="_blank" class="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 transition">
-        <i data-lucide="telegram" class="h-4 w-4"></i> BJ Tricks
-      </a>
     </div>
   </header>
 
-  <section class="relative py-12 sm:py-20">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        <div class="lg:col-span-7">
-          <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300 mb-4">
-            <span class="inline-flex h-1.5 w-1.5 rounded-full bg-indigo-500"></span>
-            60 RPM • Custom Names • Auto Delete
-          </div>
-          <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
-            <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-indigo-300 to-violet-300">Disposable Mail API</span>
-          </h1>
-          <p class="mt-4 text-base sm:text-lg text-zinc-400 max-w-2xl">Generate temporary emails, check inbox, delete messages — instantly & securely. No login. No limits.</p>
-          <div class="mt-6 flex flex-wrap gap-3">
-            <a href="#quick-start" class="scroll-link inline-flex items-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:brightness-110 active:scale-[0.98] transition">
-              <i data-lucide="zap" class="h-4 w-4"></i> Get Started
-            </a>
-            <a href="https://t.me/BJ_Devs" target="_blank" class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-zinc-100 hover:bg-white/10 hover:border-white/20 transition">
-              <i data-lucide="telegram" class="h-4 w-4"></i> Join Channel
-            </a>
-          </div>
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden fixed inset-0 z-40 bg-black/50" onclick="this.classList.add('hidden')">
+    <div class="bg-zinc-950 p-5 space-y-3" onclick="event.stopPropagation()">
+      <a href="#quick-start" class="block py-2 text-zinc-300 scroll-link">Quick Start</a>
+      <a href="#endpoints" class="block py-2 text-zinc-300 scroll-link">Endpoints</a>
+      <a href="#examples" class="block py-2 text-zinc-300 scroll-link">Examples</a>
+    </div>
+  </div>
+
+  <!-- Hero + Preview -->
+  <section class="max-w-7xl mx-auto px-4 py-10">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Disposable Mail API</h1>
+        <p class="mt-2 text-zinc-400 text-sm">Instant temporary emails. No signup. 60 RPM.</p>
+        <div class="mt-5 flex gap-3">
+          <a href="#quick-start" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 rounded text-sm font-medium scroll-link">Get Started</a>
+          <a href="https://t.me/BJ_Devs" target="_blank" class="px-4 py-2 border border-white/10 rounded text-sm">Join Channel</a>
         </div>
-        <div class="lg:col-span-5">
-          <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-5 shadow-2xl">
-            <div class="flex items-center justify-between text-sm text-zinc-300">
-              <div class="flex items-center gap-2"><i data-lucide="mail" class="h-4 w-4"></i> Example</div>
-              <span class="text-xs text-zinc-400">Real-time inbox</span>
-            </div>
-            <div class="mt-4 rounded-lg border border-white/10 bg-zinc-900 p-4">
-              <div class="space-y-2 text-xs">
-                <div class="flex justify-between"><span class="text-zinc-500">From:</span> <span class="text-indigo-400">verify@telegram.org</span></div>
-                <div class="flex justify-between"><span class="text-zinc-500">Subject:</span> <span class="text-zinc-300 truncate">Your login code: 123456</span></div>
-                <div class="flex justify-between"><span class="text-zinc-500">Time:</span> <span class="text-zinc-400">2 min ago</span></div>
-              </div>
-            </div>
-            <div class="mt-4 grid grid-cols-3 gap-2 text-[11px] text-zinc-400">
-              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2"><span class="text-zinc-200 font-medium">60</span> RPM</div>
-              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2"><span class="text-zinc-200 font-medium">Custom</span> Names</div>
-              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2"><span class="text-zinc-200 font-medium">Auto</span> Delete</div>
-            </div>
-          </div>
+      </div>
+
+      <!-- Preview Box (Reference Size) -->
+      <div class="compact-card">
+        <div class="flex justify-between text-xs text-zinc-300 mb-3">
+          <div class="flex items-center gap-1.5"><i data-lucide="mail" class="w-3.5 h-3.5"></i> Example</div>
+          <span class="text-zinc-500">Real-time inbox</span>
+        </div>
+        <div class="bg-zinc-900/50 rounded-lg p-3 space-y-1.5 text-xs border border-white/5">
+          <div class="flex justify-between"><span class="text-zinc-500">From:</span> <span class="text-indigo-400">verify@telegram.org</span></div>
+          <div class="flex justify-between"><span class="text-zinc-500">Subject:</span> <span class="text-zinc-300 truncate">Your login code: 123456</span></div>
+          <div class="flex justify-between"><span class="text-zinc-500">Time:</span> <span class="text-zinc-400">2 min ago</span></div>
+        </div>
+        <div class="mt-3 grid grid-cols-3 gap-1.5 text-[10px] text-zinc-400">
+          <div class="bg-white/5 border border-white/10 rounded px-2 py-1.5 text-center"><span class="font-medium text-zinc-200">60</span> RPM</div>
+          <div class="bg-white/5 border border-white/10 rounded px-2 py-1.5 text-center"><span class="font-medium text-zinc-200">Custom</span> Names</div>
+          <div class="bg-white/5 border border-white/10 rounded px-2 py-1.5 text-center"><span class="font-medium text-zinc-200">Auto</span> Delete</div>
         </div>
       </div>
     </div>
   </section>
 
-  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
-    <div class="grid lg:grid-cols-12 gap-8 lg:gap-10">
-      <aside class="hidden xl:col-span-3 xl:block">
-        <div class="sticky top-20">
-          <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-            <div class="text-sm font-semibold tracking-tight text-zinc-200 mb-2">On this page</div>
-            <nav class="space-y-1">
-              <a href="#quick-start" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
-                <i data-lucide="zap" class="h-4 w-4"></i> Quick Start
-              </a>
-              <a href="#endpoints" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
-                <i data-lucide="server" class="h-4 w-4"></i> Endpoints
-              </a>
-              <a href="#examples" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
-                <i data-lucide="code-2" class="h-4 w-4"></i> Examples
-              </a>
-            </nav>
-          </div>
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 space-y-6 pb-16">
+
+    <!-- Quick Start -->
+    <section id="quick-start" class="compact-card">
+      <h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-indigo-400"></i> Quick Start</h2>
+      <div class="bg-zinc-900/50 rounded-lg p-3 border border-white/5">
+        <div class="flex items-center gap-2 text-xs mb-2">
+          <span class="bg-gradient-to-r from-indigo-600 to-violet-600 px-2 py-0.5 rounded text-white text-[10px] font-bold">GET</span>
+          <code class="text-xs">/getmail</code>
+          <button data-copy="curl ${baseUrl}/getmail" class="ml-auto text-xs"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
         </div>
-      </aside>
-
-      <div class="lg:col-span-12 xl:col-span-9 space-y-10">
-
-        <section id="quick-start" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8">
-          <div class="flex items-center gap-3">
-            <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
-              <i data-lucide="zap" class="h-5 w-5 text-indigo-400"></i>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Quick Start</h2>
-          </div>
-          <p class="mt-3 text-zinc-400">Generate a random disposable email instantly:</p>
-          <div class="mt-5 rounded-xl border border-white/10 bg-zinc-950/60 p-5">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
-              <code class="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm">/getmail</code>
-              <button data-copy="curl ${baseUrl}/getmail" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-white/10 transition">
-                <i data-lucide="copy" class="h-4 w-4"></i> Copy
-              </button>
-            </div>
-            <pre class="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-sm text-zinc-200"><code>curl ${baseUrl}/getmail</code></pre>
-          </div>
-        </section>
-
-        <section id="endpoints" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8">
-          <div class="flex items-center gap-3">
-            <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
-              <i data-lucide="server" class="h-5 w-5 text-indigo-400"></i>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">API Endpoints</h2>
-          </div>
-          <div class="mt-6 space-y-4">
-            ${[
-              { method: 'GET', path: '/getmail', desc: 'Generate random email' },
-              { method: 'GET', path: '/getmail?name=xyz', desc: 'Custom name (xyz@domain)' },
-              { method: 'GET', path: '/chkmail?mail=...', desc: 'Check inbox' },
-              { method: 'GET', path: '/delete?mail=...&id=...', desc: 'Delete message' },
-              { method: 'GET', path: '/health', desc: 'Health check' }
-            ].map(ep => `
-            <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">${ep.method}</span>
-                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">${ep.path}</code>
-                <span class="text-xs text-zinc-400">${ep.desc}</span>
-                <button data-copy="${baseUrl}${ep.path.includes('?') ? ep.path.split('?')[0] : ep.path}" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 transition">
-                  <i data-lucide="copy" class="h-4 w-4"></i> Copy
-                </button>
-              </div>
-            </div>`).join('')}
-          </div>
-        </section>
-
-        <section id="examples" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8">
-          <div class="flex items-center gap-3">
-            <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
-              <i data-lucide="code-2" class="h-5 w-5 text-indigo-400"></i>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Examples</h2>
-          </div>
-          <div class="mt-6 grid md:grid-cols-2 gap-6">
-            <div class="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition">
-              <h3 class="text-sm font-semibold text-zinc-300 mb-3">Random Email</h3>
-              <pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] text-zinc-200"><code>curl ${baseUrl}/getmail</code></pre>
-            </div>
-            <div class="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition">
-              <h3 class="text-sm font-semibold text-zinc-300 mb-3">Check Inbox</h3>
-              <pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] text-zinc-200"><code>curl "${baseUrl}/chkmail?mail=xyz%40domain.com"</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8 text-center">
-          <h3 class="text-xl font-bold tracking-tight">Disposable Mail API</h3>
-          <p class="mt-2 text-zinc-400">Free, fast, and anonymous temporary email service.</p>
-          <div class="mt-6 flex justify-center items-center gap-2">
-            <span class="text-sm text-zinc-400">Made with</span>
-            <span class="text-red-500">♥</span>
-            <span class="text-sm text-zinc-400">by</span>
-            <a href="https://t.me/BJ_Devs" target="_blank" class="text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition">BJ Tricks</a>
-          </div>
-        </section>
+        <pre class="text-xs bg-black/30 p-2 rounded overflow-x-auto"><code>curl ${baseUrl}/getmail</code></pre>
       </div>
-    </div>
+    </section>
+
+    <!-- Endpoints -->
+    <section id="endpoints" class="compact-card">
+      <h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="server" class="w-5 h-5 text-indigo-400"></i> Endpoints</h2>
+      <div class="space-y-2">
+        ${['/getmail', '/getmail?name=xyz', '/chkmail?mail=...', '/delete?mail=...&id=...', '/health'].map(ep => `
+        <div class="bg-zinc-900/50 rounded-lg p-2.5 border border-white/5 flex items-center gap-2 text-xs">
+          <span class="bg-gradient-to-r from-indigo-600 to-violet-600 px-2 py-0.5 rounded text-[10px] font-bold text-white">GET</span>
+          <code class="flex-1 text-xs">${ep}</code>
+          <button data-copy="${baseUrl}${ep.includes('?') ? ep.split('?')[0] : ep}" class="text-xs"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
+        </div>`).join('')}
+      </div>
+    </section>
+
+    <!-- Examples -->
+    <section id="examples" class="compact-card">
+      <h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="code-2" class="w-5 h-5 text-indigo-400"></i> Examples</h2>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div class="bg-zinc-900/50 rounded-lg p-3 border border-white/5">
+          <div class="text-xs font-medium text-zinc-300 mb-2">Random Email</div>
+          <pre class="text-xs bg-black/30 p-2 rounded overflow-x-auto"><code>curl ${baseUrl}/getmail</code></pre>
+        </div>
+        <div class="bg-zinc-900/50 rounded-lg p-3 border border-white/5">
+          <div class="text-xs font-medium text-zinc-300 mb-2">Check Inbox</div>
+          <pre class="text-xs bg-black/30 p-2 rounded overflow-x-auto"><code>curl "${baseUrl}/chkmail?mail=xyz%40domain.com"</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="compact-card text-center py-4">
+      <p class="text-xs text-zinc-500">Made with <span class="text-red-500">♥</span> by <a href="https://t.me/BJ_Devs" class="underline text-indigo-400">BJ Tricks</a></p>
+    </footer>
   </main>
 
-  <div id="toast" class="fixed bottom-4 right-4 z-50 hidden">
-    <div class="flex items-center gap-2 rounded-lg border border-white/10 bg-zinc-900 px-4 py-2 text-sm shadow-xl">
-      <i data-lucide="check-circle-2" class="h-4 w-4 text-emerald-400"></i>
-      <span id="toastMsg" class="text-zinc-100"></span>
-    </div>
-  </div>
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-4 right-4 bg-zinc-900 border border-white/10 rounded-lg px-3 py-1.5 text-xs shadow-xl hidden"><span id="toastMsg"></span></div>
 
   <script>
-    lucide.createIcons({ attrs: { 'stroke-width': 1.5 } });
-
+    lucide.createIcons();
     fetch('/health').then(r => r.ok && document.getElementById('healthBadge').classList.remove('hidden'));
-
-    const menuBtn = document.getElementById('mobileMenuButton');
-    const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-
-    document.querySelectorAll('.scroll-link').forEach(a => {
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        const target = document.querySelector(a.getAttribute('href'));
-        window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-      });
-    });
-
-    document.querySelectorAll('[data-copy]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const text = btn.getAttribute('data-copy');
-        navigator.clipboard.writeText(text).then(() => {
-          const msg = document.getElementById('toastMsg');
-          msg.textContent = 'Copied!';
-          const toast = document.getElementById('toast');
-          toast.classList.remove('hidden');
-          setTimeout(() => toast.classList.add('hidden'), 2000);
-        });
+    document.getElementById('menuBtn').onclick = () => document.getElementById('mobileMenu').classList.toggle('hidden');
+    document.querySelectorAll('.scroll-link').forEach(a => a.onclick = e => { e.preventDefault(); document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+    document.querySelectorAll('[data-copy]').forEach(btn => btn.onclick = () => {
+      const text = btn.getAttribute('data-copy');
+      navigator.clipboard.writeText(text).then(() => {
+        const msg = document.getElementById('toastMsg'); msg.textContent = 'Copied!';
+        const toast = document.getElementById('toast'); toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 1800);
       });
     });
   </script>
