@@ -17,7 +17,7 @@
     <div class="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:48px_48px]"></div>
   </div>
 
-  <!-- Header -->
+  <!-- Top bar -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/60 border-b border-white/5">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between min-w-0">
       <a href="#" class="inline-flex items-center gap-2 min-w-0">
@@ -39,30 +39,40 @@
           <i data-lucide="rocket" class="h-4 w-4"></i>
           BJ Tricks
         </a>
-        <button id="mobileMenuButton" class="lg:hidden inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-2 text-zinc-200 hover:bg-white/10 hover:border-white/20 active:scale-95 transition">
-          <i id="iconMenu" data-lucide="menu" class="h-5 w-5"></i>
-          <i id="iconClose" data-lucide="x" class="h-5 w-5 hidden"></i>
+        <!-- Mobile menu button -->
+        <button id="mobileMenuButton" aria-expanded="false" aria-controls="mobileMenu" class="md:inline-flex lg:hidden inline-flex items-center justify-center rounded-md border border-white/10 bg-white/5 p-2 text-zinc-200 hover:bg-white/10 hover:border-white/20 active:scale-95 transition focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+          <i id="iconMenu" data-lucide="menu" class="h-5 w-5 transition-transform"></i>
+          <i id="iconClose" data-lucide="x" class="h-5 w-5 hidden transition-transform"></i>
         </button>
       </div>
     </div>
-    <!-- Mobile Menu -->
-    <div id="mobileOverlay" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 lg:hidden"></div>
-    <div id="mobileMenu" class="lg:hidden fixed inset-x-0 top-14 z-50 border-b border-white/10 bg-zinc-950/95 backdrop-blur px-4 py-4 opacity-0 -translate-y-2 hidden transition-all duration-200">
+    <!-- Mobile overlay -->
+    <div id="mobileOverlay" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200 md:hidden"></div>
+    <!-- Mobile menu panel -->
+    <div id="mobileMenu" class="md:hidden fixed inset-x-0 top-14 z-50 border-b border-white/10 bg-zinc-950/95 backdrop-blur px-4 sm:px-6 py-4 opacity-0 -translate-y-2 hidden transition-all duration-200">
       <nav class="space-y-1">
-        <a href="#quick-start" class="mobile-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
-          <span class="inline-flex items-center gap-2"><i data-lucide="rocket" class="h-4 w-4"></i> Quick Start</span>
+        <a href="#quick-start" class="mobile-link scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
+          <span class="inline-flex items-center gap-2">
+            <i data-lucide="rocket" class="h-4 w-4"></i> Quick Start
+          </span>
           <i data-lucide="chevron-right" class="h-4 w-4 text-zinc-500"></i>
         </a>
-        <a href="#api-tester" class="mobile-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
-          <span class="inline-flex items-center gap-2"><i data-lucide="beaker" class="h-4 w-4"></i> API Tester</span>
+        <a href="#api-tester" class="mobile-link scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
+          <span class="inline-flex items-center gap-2">
+            <i data-lucide="beaker" class="h-4 w-4"></i> API Tester
+          </span>
           <i data-lucide="chevron-right" class="h-4 w-4 text-zinc-500"></i>
         </a>
-        <a href="#endpoints" class="mobile-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
-          <span class="inline-flex items-center gap-2"><i data-lucide="server" class="h-4 w-4"></i> Endpoints</span>
+        <a href="#endpoints" class="mobile-link scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
+          <span class="inline-flex items-center gap-2">
+            <i data-lucide="server" class="h-4 w-4"></i> Endpoints
+          </span>
           <i data-lucide="chevron-right" class="h-4 w-4 text-zinc-500"></i>
         </a>
-        <a href="#examples" class="mobile-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
-          <span class="inline-flex items-center gap-2"><i data-lucide="lightbulb" class="h-4 w-4"></i> Examples</span>
+        <a href="#examples" class="mobile-link scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
+          <span class="inline-flex items-center gap-2">
+            <i data-lucide="lightbulb" class="h-4 w-4"></i> Examples
+          </span>
           <i data-lucide="chevron-right" class="h-4 w-4 text-zinc-500"></i>
         </a>
       </nav>
@@ -81,8 +91,8 @@
   </header>
 
   <!-- Hero -->
-  <section class="relative py-12 sm:py-20">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+  <section class="relative">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
       <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         <div class="min-w-0 lg:col-span-7">
           <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-zinc-300 mb-4">
@@ -94,11 +104,13 @@
           </h1>
           <p class="mt-4 sm:mt-5 text-base sm:text-lg text-zinc-400 max-w-2xl">Create temporary email addresses instantly. Check inbox, delete messages — all via API. No signup, no hassle.</p>
           <div class="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
-            <a href="#api-tester" class="scroll-link inline-flex items-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-4 py-2.5 text-sm font-semibold tracking-tight text-white shadow-sm hover:brightness-110 active:scale-[0.98] transition">
-              <i data-lucide="beaker" class="h-4 w-4"></i> Try the API
+            <a href="#api-tester" class="scroll-link inline-flex items-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-4 py-2.5 text-sm font-semibold tracking-tight text-white shadow-sm hover:brightness-110 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 transition">
+              <i data-lucide="beaker" class="h-4 w-4"></i>
+              Try the API
             </a>
             <a href="#quick-start" class="scroll-link inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 active:scale-[0.98] transition">
-              <i data-lucide="book-open" class="h-4 w-4"></i> Quick Start
+              <i data-lucide="book-open" class="h-4 w-4"></i>
+              Quick Start
             </a>
           </div>
         </div>
@@ -106,12 +118,13 @@
           <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-4 sm:p-6 shadow-2xl">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2 text-sm text-zinc-300">
-                <i data-lucide="mail" class="h-4 w-4"></i> Preview
+                <i data-lucide="mail" class="h-4 w-4"></i>
+                Preview
               </div>
               <span class="text-xs text-zinc-400">Instant generation</span>
             </div>
             <div class="mt-3 sm:mt-4 aspect-[16/10] w-full overflow-hidden rounded-lg border border-white/10">
-              <img alt="Disposable mail" src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=1200&auto=format&fit=crop" class="h-full w-full object-cover" loading="lazy">
+              <img alt="Disposable mail preview" src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?q=80&w=1200&auto=format&fit=crop" class="h-full w-full object-cover" loading="lazy">
             </div>
             <div class="mt-3 sm:mt-4 grid grid-cols-3 gap-2 sm:gap-3 text-[11px] sm:text-xs text-zinc-400">
               <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2 sm:px-3"><span class="text-zinc-200 font-medium">∞</span> emails</div>
@@ -124,29 +137,37 @@
     </div>
   </section>
 
-  <!-- Main Content -->
+  <!-- Main -->
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
     <div class="grid lg:grid-cols-12 gap-8 lg:gap-10">
-      <aside class="hidden xl:col-span-3 xl:block sticky top-20">
-        <div class="rounded-xl border border-white/10 bg-white/5 p-4">
-          <div class="text-sm font-semibold tracking-tight text-zinc-200 mb-2">On this page</div>
-          <nav class="space-y-1">
-            <a href="#quick-start" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
-              <i data-lucide="rocket" class="h-4 w-4"></i> Quick Start
-            </a>
-            <a href="#api-tester" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
-              <i data-lucide="beaker" class="h-4 w-4"></i> API Tester
-            </a>
-            <a href="#endpoints" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
-              <i data-lucide="server" class="h-4 w-4"></i> Endpoints
-            </a>
-            <a href="#examples" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
-              <i data-lucide="code-2" class="h-4 w-4"></i> Examples
-            </a>
-          </nav>
+      <!-- Sidebar (TOC) -->
+      <aside class="hidden xl:col-span-3 xl:block">
+        <div class="sticky top-20 space-y-3">
+          <div class="rounded-xl border border-white/10 bg-white/5 p-4">
+            <div class="text-sm font-semibold tracking-tight text-zinc-200 mb-2">On this page</div>
+            <nav class="space-y-1">
+              <a href="#quick-start" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
+                <i data-lucide="rocket" class="h-4 w-4"></i>
+                Quick Start
+              </a>
+              <a href="#api-tester" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
+                <i data-lucide="beaker" class="h-4 w-4"></i>
+                API Tester
+              </a>
+              <a href="#endpoints" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
+                <i data-lucide="server" class="h-4 w-4"></i>
+                Endpoints
+              </a>
+              <a href="#examples" class="scroll-link group flex items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition">
+                <i data-lucide="code-2" class="h-4 w-4"></i>
+                Examples
+              </a>
+            </nav>
+          </div>
         </div>
       </aside>
 
+      <!-- Content -->
       <div class="min-w-0 lg:col-span-12 xl:col-span-9 space-y-8 lg:space-y-10">
         <!-- Quick Start -->
         <section id="quick-start" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-5 sm:p-8">
@@ -157,6 +178,7 @@
             <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Quick Start</h2>
           </div>
           <p class="mt-3 text-zinc-400">Generate a disposable email instantly:</p>
+
           <div class="mt-5 rounded-xl border border-white/10 bg-zinc-950/60 p-4 sm:p-5">
             <div class="flex flex-wrap items-center gap-2">
               <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
@@ -165,7 +187,7 @@
                 <i data-lucide="copy" class="h-4 w-4"></i> Copy cURL
               </button>
             </div>
-            <pre id="curlGetMail" class="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200"><code>curl https://your-api.vercel.app/getmail</code></pre>
+            <pre id="curlGetMail" class="w-full max-w-full mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace] text-zinc-200" style="scrollbar-width: thin;"><code>curl https://your-api-url.vercel.app/getmail</code></pre>
           </div>
         </section>
 
@@ -177,6 +199,8 @@
             </div>
             <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">API Tester</h2>
           </div>
+          <p class="mt-3 text-zinc-400">Test the API directly from this page. Choose an action:</p>
+
           <form id="apiForm" class="mt-6 space-y-5">
             <div class="grid sm:grid-cols-2 gap-4">
               <div>
@@ -191,53 +215,180 @@
               </div>
               <div id="nameField" class="hidden">
                 <label for="name" class="mb-2 inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-zinc-200">
-                  <i data-lucide="user" class="h-4 w-4"></i> Custom Name
+                  <i data-lucide="user" class="h-4 w-4"></i> Custom Name (optional)
                 </label>
-                <input id="name" type="text" placeholder="bjtricks" class="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+                <input id="name" type="text" placeholder="e.g. soumyaTest" class="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
               </div>
             </div>
+
             <div id="mailField" class="hidden">
               <label for="mail" class="mb-2 inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-zinc-200">
-                <i data-lucide="mail" class="h-4 w-4"></i> Email
+                <i data-lucide="mail" class="h-4 w-4"></i> Email Address
               </label>
-              <input id="mail" type="text" placeholder="abc@domain.com" class="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+              <input id="mail" type="text" placeholder="your-generated-mail@domain.com" class="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
             </div>
-            <div id="idField" class="hidden">
-              <label for="msgId" class="mb-2 inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-zinc-200">
-                <i data-lucide="hash" class="h-4 w-4"></i> Message ID
-              </label>
-              <input id="msgId" type="text" placeholder="123" class="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+
+            <div id="idField" class="hidden grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="msgId" class="mb-2 inline-flex items-center gap-2 text-sm font-semibold tracking-tight text-zinc-200">
+                  <i data-lucide="hash" class="h-4 w-4"></i> Message ID
+                </label>
+                <input id="msgId" type="text" placeholder="123456" class="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50">
+              </div>
             </div>
-            <div class="flex gap-3">
-              <button type="submit" class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-5 py-2.5 text-sm font-semibold tracking-tight text-white shadow-sm hover:brightness-110 active:scale-[0.98] transition">
-                <i data-lucide="play" class="h-4 w-4"></i> Run
+
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+              <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-600 px-5 py-2.5 text-sm font-semibold tracking-tight text-white shadow-sm hover:brightness-110 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 transition">
+                <i data-lucide="play" class="h-4 w-4"></i>
+                Run Test
               </button>
-              <button id="loadExample" type="button" class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 active:scale-[0.98] transition">
-                <i data-lucide="lightbulb" class="h-4 w-4"></i> Example
+              <button id="loadExample" type="button" class="inline-flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 py-2.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 active:scale-[0.98] transition">
+                <i data-lucide="lightbulb" class="h-4 w-4"></i>
+                Load Example
               </button>
             </div>
           </form>
-          <div id="loading" class="hidden mt-8 flex flex-col items-center justify-center p-6">
+
+          <!-- Loading -->
+          <div id="loading" class="hidden mt-8 flex flex-col items-center justify-center rounded-xl border border-white/10 bg-white/5 p-6">
             <div class="h-10 w-10 rounded-full border-2 border-zinc-700 border-t-indigo-500 animate-spin"></div>
-            <p class="mt-3 text-sm text-zinc-400">Processing...</p>
+            <p class="mt-3 text-sm text-zinc-400">Processing your request...</p>
           </div>
+
+          <!-- Results -->
           <div id="results" class="hidden mt-8">
             <div class="rounded-xl border border-white/10 bg-zinc-950/60 p-5">
               <div class="flex items-center gap-2">
                 <i data-lucide="terminal" class="h-5 w-5 text-indigo-400"></i>
-                <h3 class="text-lg font-semibold">Response</h3>
+                <h3 class="text-lg font-semibold tracking-tight">Response</h3>
               </div>
-              <pre id="resultJson" class="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm text-zinc-200"></pre>
-              <button id="copyResult" class="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 active:scale-[0.98] transition">
-                <i data-lucide="copy" class="h-4 w-4"></i> Copy JSON
-              </button>
+              <pre id="resultJson" class="mt-4 w-full max-w-full overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"></pre>
+              <div class="mt-4 flex flex-wrap items-center gap-3">
+                <button id="copyResult" class="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 active:scale-[0.98] transition">
+                  <i data-lucide="copy" class="h-4 w-4"></i>
+                  Copy JSON
+                </button>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- Endpoints, Examples, Footer – Same as before -->
-        <!-- (Baki sections same hain, space ke liye yahan chhota kiya) -->
-        <!-- Pura code niche script tag mein hai -->
+        <!-- Endpoints -->
+        <section id="endpoints" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-5 sm:p-8">
+          <div class="flex items-center gap-3">
+            <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
+              <i data-lucide="server" class="h-5 w-5 text-indigo-400"></i>
+            </div>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">API Endpoints</h2>
+          </div>
+
+          <div class="mt-5 space-y-4">
+            <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
+                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/getmail</code>
+                <span class="text-xs text-zinc-400">Generate random email</span>
+                <button type="button" data-endpoint="/getmail" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
+                  <i data-lucide="copy" class="h-4 w-4"></i> Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
+                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/getmail?name=xyz</code>
+                <span class="text-xs text-zinc-400">Custom name (if available)</span>
+                <button type="button" data-endpoint="/getmail?name=xyz" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
+                  <i data-lucide="copy" class="h-4 w-4"></i> Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
+                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/chkmail?mail=...</code>
+                <span class="text-xs text-zinc-400">Check inbox</span>
+                <button type="button" data-endpoint="/chkmail?mail=..." class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
+                  <i data-lucide="copy" class="h-4 w-4"></i> Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
+                <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">/delete?mail=...&id=123</code>
+                <span class="text-xs text-zinc-400">Delete message</span>
+                <button type="button" data-endpoint="/delete?mail=...&id=123" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 active:scale-[0.98] transition">
+                  <i data-lucide="copy" class="h-4 w-4"></i> Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Examples -->
+        <section id="examples" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-5 sm:p-8">
+          <div class="flex items-center gap-3">
+            <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
+              <i data-lucide="lightbulb" class="h-5 w-5 text-indigo-400"></i>
+            </div>
+            <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Examples</h2>
+          </div>
+
+          <div class="mt-6 flex gap-5 overflow-x-auto snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-2 lg:gap-6 lg:overflow-visible lg:snap-none">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition">
+              <h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Generate Random Email</h3>
+              <pre class="w-full max-w-full overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>GET /getmail</code></pre>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition">
+              <h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Custom Name</h3>
+              <pre class="w-full max-w-full overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>GET /getmail?name=bjtricks123</code></pre>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition">
+              <h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Check Inbox</h3>
+              <pre class="w-full max-w-full overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>GET /chkmail?mail=abc%40domain.com</code></pre>
+            </div>
+
+            <div class="rounded-xl border border-white/10 bg-white/5 p-4 sm:p-5 min-w-[85%] sm:min-w-[70%] snap-start lg:min-w-0 hover:bg-white/10 transition">
+              <h3 class="text-sm font-semibold tracking-tight text-zinc-300 mb-3">Delete Message</h3>
+              <pre class="w-full max-w-full overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] sm:text-sm leading-relaxed text-zinc-200 [font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono',monospace]" style="scrollbar-width: thin;"><code>GET /delete?mail=abc%40domain.com&id=123</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <section class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-5 sm:p-8">
+          <div class="text-center">
+            <h3 class="text-xl font-bold tracking-tight">BJ Disposable Mail API v1.0.0</h3>
+            <p class="mt-2 text-zinc-400">Instant temporary emails with full inbox control</p>
+            <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+                <div class="text-2xl font-extrabold tracking-tight text-zinc-100">∞</div>
+                <div class="text-xs text-zinc-400">Emails</div>
+              </div>
+              <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+                <div class="text-2xl font-extrabold tracking-tight text-zinc-100">Real-time</div>
+                <div class="text-xs text-zinc-400">Inbox Updates</div>
+              </div>
+              <div class="rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
+                <div class="text-2xl font-extrabold tracking-tight text-zinc-100">DELETE</div>
+                <div class="text-xs text-zinc-400">Support</div>
+              </div>
+            </div>
+            <div class="mt-6 flex items-center justify-center gap-2">
+              <span class="text-sm text-zinc-400">Powered by</span>
+              <a href="https://t.me/BJ_Devs" target="_blank" class="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 transition">
+                <i data-lucide="rocket" class="h-4 w-4"></i> BJ Tricks
+              </a>
+            </div>
+            <div class="mt-3 text-xs text-zinc-500">Docs • API • Examples</div>
+          </div>
+        </section>
       </div>
     </div>
   </main>
@@ -250,13 +401,178 @@
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.38/dist/lenis.min.js"></script>
   <script>
-    lucide.createIcons();
+    // Icons
+    if (window.lucide) window.lucide.createIcons({ attrs: { 'stroke-width': 1.5 } });
+
+    // Smooth scrolling
+    let lenis = null;
+    try {
+      if (window.Lenis) {
+        lenis = new Lenis({ duration: 1.1, smoothWheel: true, smoothTouch: false });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+      }
+    } catch (e) {}
+    function smoothScrollTo(target) {
+      const el = document.querySelector(target);
+      if (!el) return;
+      if (lenis) lenis.scrollTo(target, { offset: -72 });
+      else window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+    }
+    document.querySelectorAll('.scroll-link').forEach(el => {
+      el.addEventListener('click', e => { e.preventDefault(); smoothScrollTo(el.getAttribute('href')); });
+    });
+
     const API_BASE_URL = window.location.origin;
-    // Full JS logic same as previous message
-    // (Copy-paste from previous response)
+    const apiForm = document.getElementById('apiForm');
+    const actionSelect = document.getElementById('action');
+    const nameField = document.getElementById('nameField');
+    const mailField = document.getElementById('mailField');
+    const idField = document.getElementById('idField');
+    const nameInput = document.getElementById('name');
+    const mailInput = document.getElementById('mail');
+    const msgIdInput = document.getElementById('msgId');
+    const loading = document.getElementById('loading');
+    const results = document.getElementById('results');
+    const resultJson = document.getElementById('resultJson');
+    const copyResult = document.getElementById('copyResult');
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    const healthBadge = document.getElementById('healthBadge');
+    const healthBadgeMobile = document.getElementById('healthBadgeMobile');
+
+    // Mobile menu
+    const mobileMenuBtn = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    const iconMenu = document.getElementById('iconMenu');
+    const iconClose = document.getElementById('iconClose');
+    let mobileAnimating = false;
+    function openMobileMenu() {
+      if (mobileAnimating) return;
+      mobileAnimating = true;
+      mobileMenu.classList.remove('hidden');
+      mobileOverlay.classList.remove('pointer-events-none','opacity-0');
+      void mobileMenu.offsetHeight;
+      mobileMenu.classList.remove('opacity-0','-translate-y-2');
+      mobileMenu.classList.add('opacity-100','translate-y-0');
+      mobileOverlay.classList.add('opacity-100');
+      iconMenu.classList.add('hidden');
+      iconClose.classList.remove('hidden');
+      mobileMenuBtn.setAttribute('aria-expanded', 'true');
+      setTimeout(() => mobileAnimating = false, 220);
+    }
+    function closeMobileMenu() {
+      if (mobileAnimating) return;
+      mobileAnimating = true;
+      mobileMenu.classList.remove('opacity-100','translate-y-0');
+      mobileMenu.classList.add('opacity-0','-translate-y-2');
+      mobileOverlay.classList.remove('opacity-100');
+      mobileOverlay.classList.add('opacity-0');
+      iconMenu.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      setTimeout(() => {
+        mobileMenu.classList.add('hidden');
+        mobileOverlay.classList.add('pointer-events-none');
+        mobileAnimating = false;
+      }, 220);
+    }
+    mobileMenuBtn?.addEventListener('click', () => { !mobileMenu.classList.contains('hidden') ? closeMobileMenu() : openMobileMenu(); });
+    mobileOverlay?.addEventListener('click', closeMobileMenu);
+    document.querySelectorAll('#mobileMenu .mobile-link').forEach(a => a.addEventListener('click', closeMobileMenu));
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', e => e.matches && closeMobileMenu());
+
+    // Toast
+    function showToast(msg, type = 'success') {
+      toastMessage.textContent = msg;
+      const icon = toast.querySelector('i[data-lucide]');
+      if (icon) icon.remove();
+      const i = document.createElement('i');
+      i.setAttribute('data-lucide', type === 'error' ? 'x-circle' : 'check-circle-2');
+      i.className = type === 'error' ? 'h-4 w-4 text-rose-400' : 'h-4 w-4 text-emerald-400';
+      toast.firstElementChild.prepend(i);
+      if (window.lucide) window.lucide.createIcons();
+      toast.classList.remove('hidden');
+      toast.style.pointerEvents = 'auto';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => toast.classList.add('hidden'), 2800);
+    }
+
+    // Copy
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Copy failed', 'error'));
+    }
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-copy');
+        const el = document.querySelector(target);
+        if (el) copyText(el.innerText.trim());
+      });
+    });
+    document.querySelectorAll('[data-endpoint]').forEach(btn => {
+      btn.addEventListener('click', () => copyText(API_BASE_URL + btn.getAttribute('data-endpoint')));
+    });
+    copyResult.addEventListener('click', () => copyText(resultJson.innerText));
+
+    // Action change
+    actionSelect.addEventListener('change', () => {
+      const val = actionSelect.value;
+      nameField.classList.toggle('hidden', val !== 'getmail');
+      mailField.classList.toggle('hidden', val === 'getmail');
+      idField.classList.toggle('hidden', val !== 'delete');
+    });
+
+    // Load example
+    document.getElementById('loadExample').addEventListener('click', () => {
+      actionSelect.value = 'getmail';
+      nameInput.value = 'bjtricks';
+      nameField.classList.remove('hidden');
+      mailField.classList.add('hidden');
+      idField.classList.add('hidden');
+      showToast('Example loaded: Custom email generation');
+    });
+
+    // Health check
+    fetch(`${API_BASE_URL}/`).then(r => r.ok && (healthBadge?.classList.remove('hidden'), healthBadgeMobile?.classList.remove('hidden'))).catch(() => {});
+
+    // Form submit
+    apiForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const action = actionSelect.value;
+      let url = '';
+      if (action === 'getmail') {
+        url = nameInput.value ? `${API_BASE_URL}/getmail?name=${encodeURIComponent(nameInput.value)}` : `${API_BASE_URL}/getmail`;
+      } else if (action === 'chkmail') {
+        if (!mailInput.value) return showToast('Email required', 'error');
+        url = `${API_BASE_URL}/chkmail?mail=${encodeURIComponent(mailInput.value)}`;
+      } else if (action === 'delete') {
+        if (!mailInput.value || !msgIdInput.value) return showToast('Email & ID required', 'error');
+        url = `${API_BASE_URL}/delete?mail=${encodeURIComponent(mailInput.value)}&id=${msgIdInput.value}`;
+      }
+
+      loading.classList.remove('hidden');
+      results.classList.add('hidden');
+
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        resultJson.textContent = JSON.stringify(data, null, 2);
+        results.classList.remove('hidden');
+        showToast('Success!');
+        smoothScrollTo('#results');
+      } catch (err) {
+        resultJson.textContent = `Error: ${err.message}`;
+        results.classList.remove('hidden');
+        showToast('Request failed', 'error');
+      } finally {
+        loading.classList.add('hidden');
+      }
+    });
   </script>
 </body>
 </html>
