@@ -206,7 +206,7 @@ app.get('/health', (req, res) => {
 });
 
 // ======================
-// FINAL ODS-STYLE DOCS (EXAMPLES 100% FIXED)
+// FINAL VERSION 2 – ODS-STYLE DOCS (EXAMPLES PERFECT SIZE)
 // ======================
 
 app.get('/', (req, res) => {
@@ -331,7 +331,7 @@ app.get('/', (req, res) => {
             <i class="fas fa-copy"></i> Copy
           </button>
         </div>
-        <pre class="text-xs font-mono text-slate-600 overflow-x-auto">curl ${baseUrl}/getmail</pre>
+        <pre class="text-xs font-mono text-slate-600 overflow-x-auto whitespace-nowrap">curl ${baseUrl}/getmail</pre>
       </div>
     </div>
 
@@ -363,32 +363,32 @@ app.get('/', (req, res) => {
       </div>
     </div>
 
-    <!-- EXAMPLES - 100% FIXED (NO OVERFLOW) -->
+    <!-- EXAMPLES – PERFECT SIZE LIKE QUICK START -->
     <div class="obf-card p-6 mb-6">
       <h3 class="flex items-center gap-2 font-bold text-lg text-slate-900 mb-5">
         <i class="fas fa-code text-slate-900"></i> Examples
       </h3>
-      <div class="grid md:grid-cols-2 gap-4">
+      <div class="space-y-4">
         <!-- Random Email -->
         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-bold text-slate-900 mb-2">Random Email</h4>
-          <div class="flex items-center justify-between">
-            <pre class="text-xs font-mono text-slate-600 overflow-x-auto whitespace-nowrap"><code id="random-curl">curl ${baseUrl}/getmail</code></pre>
-            <button data-copy="${baseUrl}/getmail" class="ml-2 text-xs text-slate-600 hover:text-slate-900">
-              <i class="fas fa-copy"></i>
+          <div class="flex items-center justify-between mb-2">
+            <code class="text-sm font-mono text-slate-700">GET /getmail</code>
+            <button data-copy="${baseUrl}/getmail" class="text-xs text-slate-600 hover:text-slate-900">
+              <i class="fas fa-copy"></i> Copy
             </button>
           </div>
+          <pre class="text-xs font-mono text-slate-600 overflow-x-auto whitespace-nowrap"><code id="random-curl">curl ${baseUrl}/getmail</code></pre>
         </div>
 
         <!-- Check Inbox -->
         <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <h4 class="text-sm font-bold text-slate-900 mb-2">Check Inbox</h4>
-          <div class="flex items-center justify-between">
-            <pre class="text-xs font-mono text-slate-600 overflow-x-auto whitespace-nowrap"><code id="check-curl">curl "${baseUrl}/chkmail?mail=xyz%40domain.com"</code></pre>
-            <button data-copy="${baseUrl}/chkmail?mail=xyz%40domain.com" class="ml-2 text-xs text-slate-600 hover:text-slate-900">
-              <i class="fas fa-copy"></i>
+          <div class="flex items-center justify-between mb-2">
+            <code class="text-sm font-mono text-slate-700">GET /chkmail</code>
+            <button data-copy="${baseUrl}/chkmail?mail=xyz%40domain.com" class="text-xs text-slate-600 hover:text-slate-900">
+              <i class="fas fa-copy"></i> Copy
             </button>
           </div>
+          <pre class="text-xs font-mono text-slate-600 overflow-x-auto whitespace-nowrap"><code id="check-curl">curl "${baseUrl}/chkmail?mail=xyz%40domain.com"</code></pre>
         </div>
       </div>
     </div>
@@ -423,7 +423,7 @@ app.get('/', (req, res) => {
     // Auto domain detection
     const baseUrl = window.location.origin;
 
-    // Update curl commands
+    // Update curl commands dynamically
     document.getElementById('random-curl').textContent = \`curl \${baseUrl}/getmail\`;
     document.getElementById('check-curl').textContent = \`curl "\${baseUrl}/chkmail?mail=xyz%40domain.com"\`;
 
