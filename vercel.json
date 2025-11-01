@@ -8,9 +8,24 @@
   ],
   "routes": [
     {
+      "src": "/",
+      "dest": "/public/index.html"
+    },
+    {
+      "src": "/getmail",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/chkmail",
+      "dest": "/index.js"
+    },
+    {
+      "src": "/delete",
+      "dest": "/index.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.js"
     }
   ]
 }
-    
