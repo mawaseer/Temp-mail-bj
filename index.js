@@ -206,9 +206,11 @@ app.get('/health', (req, res) => {
 });
 
 // ======================
-// DOCS – FULLY WORKING
+// FINAL RAYSO-STYLE DOCS
 // ======================
+
 app.get('/', (req, res) => {
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
   res.setHeader('Content-Type', 'text/html');
   res.send(`<!DOCTYPE html>
 <html lang="en">
@@ -225,21 +227,18 @@ app.get('/', (req, res) => {
   <style>
     * { font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
     pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace; }
-    [data-copy]:hover { background-color: rgba(255,255,255,0.1); }
   </style>
 </head>
 <body class="bg-zinc-950 text-zinc-100 antialiased min-h-screen overflow-x-hidden selection:bg-indigo-500/30 selection:text-white">
-  <!-- Background -->
   <div class="pointer-events-none fixed inset-0 -z-10">
     <div class="absolute inset-0 bg-[radial-gradient(1200px_600px_at_80%_-20%,rgba(99,102,241,.15),transparent),radial-gradient(800px_400px_at_0%_120%,rgba(168,85,247,.12),transparent)]"></div>
     <div class="absolute inset-0 opacity-[0.03] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:48px_48px]"></div>
   </div>
 
-  <!-- Header -->
   <header class="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/60 border-b border-white/5">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between min-w-0">
       <a href="#" class="inline-flex items-center gap-2 min-w-0">
-        <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-tr from-indigo-600 to-violet-600 text-xs font-bold text-white">DM</span>
+        <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-tr from-indigo-600 to-violet-600 text-xs font-bold">DM</span>
         <span class="text-sm font-semibold tracking-tight text-zinc-200 truncate">Disposable Mail</span>
       </a>
       <nav class="hidden lg:flex items-center gap-6">
@@ -260,8 +259,7 @@ app.get('/', (req, res) => {
       </div>
     </div>
 
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="lg:hidden fixed inset-x-0 top-14 z-50 border-b border-white/10 bg-zinc-950/95 backdrop-blur px-4 py-4 hidden transition-all duration-200">
+    <div id="mobileMenu" class="lg:hidden fixed inset-x-0 top-14 z-50 border-b border-white/10 bg-zinc-950/95 backdrop-blur px-4 py-4 hidden">
       <nav class="space-y-1">
         <a href="#quick-start" class="scroll-link flex items-center justify-between rounded-md px-3 py-2 text-sm text-zinc-300 hover:bg-white/5 hover:text-zinc-100 transition">
           <span class="inline-flex items-center gap-2"><i data-lucide="zap" class="h-4 w-4"></i> Quick Start</span>
@@ -277,13 +275,12 @@ app.get('/', (req, res) => {
         </a>
       </nav>
       <div class="my-4 h-px bg-white/10"></div>
-      <a href="https://t.me/BJ_Devs" target="_blank" class="inline-flex w-full items-center justify-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 transition">
+      <a href="https://t.me/BJ_Devs" target="_blank" class="inline-flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-semibold tracking-tight text-zinc-100 hover:bg-white/10 hover:border-white/20 transition">
         <i data-lucide="telegram" class="h-4 w-4"></i> BJ Tricks
       </a>
     </div>
   </header>
 
-  <!-- Hero -->
   <section class="relative py-12 sm:py-20">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -308,7 +305,7 @@ app.get('/', (req, res) => {
         <div class="lg:col-span-5">
           <div class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-5 shadow-2xl">
             <div class="flex items-center justify-between text-sm text-zinc-300">
-              <div class="flex items-center gap-2"><i data-lucide="mail" class="h-4 w-4"></i> Live Preview</div>
+              <div class="flex items-center gap-2"><i data-lucide="mail" class="h-4 w-4"></i> Example</div>
               <span class="text-xs text-zinc-400">Real-time inbox</span>
             </div>
             <div class="mt-4 rounded-lg border border-white/10 bg-zinc-900 p-4">
@@ -319,9 +316,9 @@ app.get('/', (req, res) => {
               </div>
             </div>
             <div class="mt-4 grid grid-cols-3 gap-2 text-[11px] text-zinc-400">
-              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2 text-center"><span class="text-zinc-200 font-medium">60</span><br>RPM</div>
-              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2 text-center"><span class="text-zinc-200 font-medium">Custom</span><br>Names</div>
-              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2 text-center"><span class="text-zinc-200 font-medium">Auto</span><br>Delete</div>
+              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2"><span class="text-zinc-200 font-medium">60</span> RPM</div>
+              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2"><span class="text-zinc-200 font-medium">Custom</span> Names</div>
+              <div class="rounded-md border border-white/10 bg-white/5 px-2.5 py-2"><span class="text-zinc-200 font-medium">Auto</span> Delete</div>
             </div>
           </div>
         </div>
@@ -329,10 +326,8 @@ app.get('/', (req, res) => {
     </div>
   </section>
 
-  <!-- Main Content -->
   <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20">
     <div class="grid lg:grid-cols-12 gap-8 lg:gap-10">
-      <!-- Sidebar TOC -->
       <aside class="hidden xl:col-span-3 xl:block">
         <div class="sticky top-20">
           <div class="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -352,10 +347,8 @@ app.get('/', (req, res) => {
         </div>
       </aside>
 
-      <!-- Content -->
       <div class="lg:col-span-12 xl:col-span-9 space-y-10">
 
-        <!-- Quick Start -->
         <section id="quick-start" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8">
           <div class="flex items-center gap-3">
             <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
@@ -368,15 +361,14 @@ app.get('/', (req, res) => {
             <div class="flex flex-wrap items-center gap-2">
               <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">GET</span>
               <code class="rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm">/getmail</code>
-              <button data-copy="curl {{BASE_URL}}/getmail" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-white/10 transition">
+              <button data-copy="curl ${baseUrl}/getmail" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-white/10 transition">
                 <i data-lucide="copy" class="h-4 w-4"></i> Copy
               </button>
             </div>
-            <pre class="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-sm text-zinc-200"><code id="curl-getmail">curl {{BASE_URL}}/getmail</code></pre>
+            <pre class="mt-4 overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-sm text-zinc-200"><code>curl ${baseUrl}/getmail</code></pre>
           </div>
         </section>
 
-        <!-- Endpoints -->
         <section id="endpoints" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8">
           <div class="flex items-center gap-3">
             <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
@@ -386,18 +378,18 @@ app.get('/', (req, res) => {
           </div>
           <div class="mt-6 space-y-4">
             ${[
-              { method: 'GET', path: '/getmail', desc: 'Generate random email', example: 'curl {{BASE_URL}}/getmail' },
-              { method: 'GET', path: '/getmail?name=xyz', desc: 'Custom name (xyz@domain)', example: 'curl "{{BASE_URL}}/getmail?name=xyz"' },
-              { method: 'GET', path: '/chkmail?mail=...', desc: 'Check inbox', example: 'curl "{{BASE_URL}}/chkmail?mail=xyz%40domain.com"' },
-              { method: 'GET', path: '/delete?mail=...&id=...', desc: 'Delete message', example: 'curl "{{BASE_URL}}/delete?mail=xyz%40domain.com&id=123"' },
-              { method: 'GET', path: '/health', desc: 'Health check', example: 'curl {{BASE_URL}}/health' }
+              { method: 'GET', path: '/getmail', desc: 'Generate random email' },
+              { method: 'GET', path: '/getmail?name=xyz', desc: 'Custom name (xyz@domain)' },
+              { method: 'GET', path: '/chkmail?mail=...', desc: 'Check inbox' },
+              { method: 'GET', path: '/delete?mail=...&id=...', desc: 'Delete message' },
+              { method: 'GET', path: '/health', desc: 'Health check' }
             ].map(ep => `
             <div class="group rounded-xl border border-white/10 bg-white/5 p-4 hover:bg-white/10 transition">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="inline-flex items-center rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 px-3 py-1 text-xs font-semibold">${ep.method}</span>
                 <code class="rounded-md border border-white/10 bg-zinc-950/60 px-3 py-1.5 text-sm">${ep.path}</code>
                 <span class="text-xs text-zinc-400">${ep.desc}</span>
-                <button data-copy="${ep.example}" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 transition">
+                <button data-copy="${baseUrl}${ep.path.includes('?') ? ep.path.split('?')[0] : ep.path}" class="ml-auto inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-zinc-950/60 px-2.5 py-1.5 text-xs text-zinc-300 hover:bg-zinc-900 transition">
                   <i data-lucide="copy" class="h-4 w-4"></i> Copy
                 </button>
               </div>
@@ -405,7 +397,6 @@ app.get('/', (req, res) => {
           </div>
         </section>
 
-        <!-- Examples -->
         <section id="examples" class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8">
           <div class="flex items-center gap-3">
             <div class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/20">
@@ -416,20 +407,19 @@ app.get('/', (req, res) => {
           <div class="mt-6 grid md:grid-cols-2 gap-6">
             <div class="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition">
               <h3 class="text-sm font-semibold text-zinc-300 mb-3">Random Email</h3>
-              <pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] text-zinc-200"><code>curl {{BASE_URL}}/getmail</code></pre>
+              <pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] text-zinc-200"><code>curl ${baseUrl}/getmail</code></pre>
             </div>
             <div class="rounded-xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition">
               <h3 class="text-sm font-semibold text-zinc-300 mb-3">Check Inbox</h3>
-              <pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] text-zinc-200"><code>curl "{{BASE_URL}}/chkmail?mail=xyz%40domain.com"</code></pre>
+              <pre class="overflow-x-auto rounded-lg border border-white/10 bg-zinc-900 p-4 text-[13px] text-zinc-200"><code>curl "${baseUrl}/chkmail?mail=xyz%40domain.com"</code></pre>
             </div>
           </div>
         </section>
 
-        <!-- Footer -->
         <section class="rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-900/60 to-zinc-900/30 p-6 sm:p-8 text-center">
           <h3 class="text-xl font-bold tracking-tight">Disposable Mail API</h3>
           <p class="mt-2 text-zinc-400">Free, fast, and anonymous temporary email service.</p>
-          <div class="mt-6 flex items-center justify-center gap-2">
+          <div class="mt-6 flex justify-center items-center gap-2">
             <span class="text-sm text-zinc-400">Made with</span>
             <span class="text-red-500">♥</span>
             <span class="text-sm text-zinc-400">by</span>
@@ -440,64 +430,37 @@ app.get('/', (req, res) => {
     </div>
   </main>
 
-  <!-- Toast -->
   <div id="toast" class="fixed bottom-4 right-4 z-50 hidden">
     <div class="flex items-center gap-2 rounded-lg border border-white/10 bg-zinc-900 px-4 py-2 text-sm shadow-xl">
       <i data-lucide="check-circle-2" class="h-4 w-4 text-emerald-400"></i>
-      <span id="toastMsg" class="text-zinc-100">Copied!</span>
+      <span id="toastMsg" class="text-zinc-100"></span>
     </div>
   </div>
 
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons({ attrs: { 'stroke-width': 1.5 } });
 
-    // Get Base URL
-    const BASE_URL = window.location.origin;
+    fetch('/health').then(r => r.ok && document.getElementById('healthBadge').classList.remove('hidden'));
 
-    // Replace {{BASE_URL}} in all code blocks
-    document.querySelectorAll('code').forEach(el => {
-      el.innerHTML = el.innerHTML.replace(/{{BASE_URL}}/g, BASE_URL);
-    });
-
-    // Health Check
-    fetch('/health')
-      .then(r => r.ok && document.getElementById('healthBadge').classList.remove('hidden'))
-      .catch(() => {});
-
-    // Mobile Menu Toggle
     const menuBtn = document.getElementById('mobileMenuButton');
     const mobileMenu = document.getElementById('mobileMenu');
-    menuBtn?.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
+    menuBtn?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
 
-    // Smooth Scroll
     document.querySelectorAll('.scroll-link').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
         const target = document.querySelector(a.getAttribute('href'));
-        if (target) {
-          window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-        }
+        window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
       });
     });
 
-    // Copy to Clipboard
     document.querySelectorAll('[data-copy]').forEach(btn => {
       btn.addEventListener('click', () => {
-        let text = btn.getAttribute('data-copy');
-        text = text.replace(/{{BASE_URL}}/g, BASE_URL);
+        const text = btn.getAttribute('data-copy');
         navigator.clipboard.writeText(text).then(() => {
-          const toast = document.getElementById('toast');
           const msg = document.getElementById('toastMsg');
           msg.textContent = 'Copied!';
-          toast.classList.remove('hidden');
-          setTimeout(() => toast.classList.add('hidden'), 2000);
-        }).catch(() => {
           const toast = document.getElementById('toast');
-          const msg = document.getElementById('toastMsg');
-          msg.textContent = 'Failed!';
           toast.classList.remove('hidden');
           setTimeout(() => toast.classList.add('hidden'), 2000);
         });
@@ -507,3 +470,5 @@ app.get('/', (req, res) => {
 </body>
 </html>`);
 });
+
+module.exports = app;
